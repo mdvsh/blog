@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deploying Web Apps in Julia | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Deploying Web Apps in Julia" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Note: Source Files on GitHub Tip: Preview Deployed Application In this blog, I’ll show how you can deploy a Dashboard written in Julia using Heroku, a free cloud storage platform. This is done under Google Code-In for Julia. Task Statement Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia. This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. Background The task states that the task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. I’d like to state that I did attempt to implement a dashboard written in python and put my life into it. However, the callback didn’t work and I couldn’t submit it. But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying your own dashboard (or webapp). Step 1 In this tutorial, I’ll be deploying this dash file. Let’s get started… Pre-requisites : A Heroku Account Your Files. (here, Dashboard files) Julia Installation Heroku CLI (Command Line Interface) I have uploaded the files at my GitHub Repository. Check them out here. Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through scoop (a package manager). Here’s how to do it. Install Scoop $ scoop install heroku-cli After the CLI is succesfully installed, run: $ heroku login A browser window will open, prompting you to login to your heroku account using a single button. eazze right ? Step 2 Create a new app through your Heroku Dashboard. Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do… I’ll assume that we named our project deploy-tutorial-plot. Don’t name this, it’s already the name of my app xD. Step 3 I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia env folder with a Project.toml and Manifest.toml. Read this to know how to create an enivironment in Julia. The Project and Manifestt .toml(s) contain information about your code: dependancies, versions, and author name. Let’s take web_dash as the folder containing my files. Hop into your cmd now to intialize a git rep in your folder. $ cd web_dash $ git init Now, connect your Heroku app with you local folder. This can be done by running $ git heroku git:remote -a deploy-tutorial-plot Put your app’s name after -a. Step 4 Now, to the working directory (here, your folder) add a Procfile. A Procfile is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform. web: julia --project web_dash.jl $PORT Here, web_dash.jl is your app file name. $PORT represents the PORT number heroku will be using for your application. At this point, your working directory must look like this: Folder PATH listing for volume RAVENCLAW Volume serial number is B4F9-8664 C:. Manifest.toml Procfile Project.toml web_dash.jl We still need to parse this PORT number on our script before starting the server. If we are using HTTP.jl we can replace the alreay existing hosting code in our file by the following : Replace HTTP.Sockets.localhost with &quot;0.0.0.0&quot; Replace /YOURPORTNUMBER/ with parse(Int,ARGS[1]) Ultimately, the ending of must look like this: handler = make_handler(app, debug = false) println(&quot;started at localhost:$(parse(Int, ARGS[1]))&quot;) HTTP.serve(handler,&quot;0.0.0.0&quot;,parse(Int,ARGS[1])) Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a BuildPack. Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime. Even though, Julia isn’t there on the Heroku Languages page; we have a julia-buildPack available at our disposal from here. https://github.com/Optomatica/heroku-buildpack-julia.git Paste this in buildpack row by moving to your app settings page on your heroku site. Final Step Now, we’re ready to commit and deploy our plot by pushing to Heroku. If you aren’t familiar with basic git commands to do this, please try to know them beforehand. (Trust me, they’re really helpful! You won’t regret learning more about it…) $ git status $ git add . $ git commit -m &quot;commit message&quot; $git push heroku master This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying. Enumerating objects: 6, done. Counting objects: 100% (6/6), done. Delta compression using up to 4 threads Compressing objects: 100% (5/5), done. Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done. Total 6 (delta 0), reused 0 (delta 0) remote: Compressing source files... done. remote: Building source: remote: remote: -----&gt; Julia app detected remote: -----&gt; Installing julia .... - julia-1.3.0-linux-x86_64.tar.gz . . . remote: -----&gt; Compressing... remote: Done: 364.6M remote: -----&gt; Launching... remote: ! Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time. remote: Released v3 remote: https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku remote: remote: Verifying deploy... done. To https://git.heroku.com/deploy-tutorial-plot.git * [new branch] master -&gt; master Phew, so if everything went awesome on your part too, you can see your app hosted at [app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/). I hope that you found this tutorial helpful. Cheerio! Hosted App Files on GitHub" />
+<meta property="og:description" content="Note: Source Files on GitHub Tip: Preview Deployed Application In this blog, I’ll show how you can deploy a Dashboard written in Julia using Heroku, a free cloud storage platform. This is done under Google Code-In for Julia. Task Statement Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia. This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. Background The task states that the task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. I’d like to state that I did attempt to implement a dashboard written in python and put my life into it. However, the callback didn’t work and I couldn’t submit it. But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying your own dashboard (or webapp). Step 1 In this tutorial, I’ll be deploying this dash file. Let’s get started… Pre-requisites : A Heroku Account Your Files. (here, Dashboard files) Julia Installation Heroku CLI (Command Line Interface) I have uploaded the files at my GitHub Repository. Check them out here. Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through scoop (a package manager). Here’s how to do it. Install Scoop $ scoop install heroku-cli After the CLI is succesfully installed, run: $ heroku login A browser window will open, prompting you to login to your heroku account using a single button. eazze right ? Step 2 Create a new app through your Heroku Dashboard. Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do… I’ll assume that we named our project deploy-tutorial-plot. Don’t name this, it’s already the name of my app xD. Step 3 I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia env folder with a Project.toml and Manifest.toml. Read this to know how to create an enivironment in Julia. The Project and Manifestt .toml(s) contain information about your code: dependancies, versions, and author name. Let’s take web_dash as the folder containing my files. Hop into your cmd now to intialize a git rep in your folder. $ cd web_dash $ git init Now, connect your Heroku app with you local folder. This can be done by running $ git heroku git:remote -a deploy-tutorial-plot Put your app’s name after -a. Step 4 Now, to the working directory (here, your folder) add a Procfile. A Procfile is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform. web: julia --project web_dash.jl $PORT Here, web_dash.jl is your app file name. $PORT represents the PORT number heroku will be using for your application. At this point, your working directory must look like this: Folder PATH listing for volume RAVENCLAW Volume serial number is B4F9-8664 C:. Manifest.toml Procfile Project.toml web_dash.jl We still need to parse this PORT number on our script before starting the server. If we are using HTTP.jl we can replace the alreay existing hosting code in our file by the following : Replace HTTP.Sockets.localhost with &quot;0.0.0.0&quot; Replace /YOURPORTNUMBER/ with parse(Int,ARGS[1]) Ultimately, the ending of must look like this: handler = make_handler(app, debug = false) println(&quot;started at localhost:$(parse(Int, ARGS[1]))&quot;) HTTP.serve(handler,&quot;0.0.0.0&quot;,parse(Int,ARGS[1])) Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a BuildPack. Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime. Even though, Julia isn’t there on the Heroku Languages page; we have a julia-buildPack available at our disposal from here. https://github.com/Optomatica/heroku-buildpack-julia.git Paste this in buildpack row by moving to your app settings page on your heroku site. Final Step Now, we’re ready to commit and deploy our plot by pushing to Heroku. If you aren’t familiar with basic git commands to do this, please try to know them beforehand. (Trust me, they’re really helpful! You won’t regret learning more about it…) $ git status $ git add . $ git commit -m &quot;commit message&quot; $git push heroku master This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying. Enumerating objects: 6, done. Counting objects: 100% (6/6), done. Delta compression using up to 4 threads Compressing objects: 100% (5/5), done. Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done. Total 6 (delta 0), reused 0 (delta 0) remote: Compressing source files... done. remote: Building source: remote: remote: -----&gt; Julia app detected remote: -----&gt; Installing julia .... - julia-1.3.0-linux-x86_64.tar.gz . . . remote: -----&gt; Compressing... remote: Done: 364.6M remote: -----&gt; Launching... remote: ! Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time. remote: Released v3 remote: https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku remote: remote: Verifying deploy... done. To https://git.heroku.com/deploy-tutorial-plot.git * [new branch] master -&gt; master Phew, so if everything went awesome on your part too, you can see your app hosted at [app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/). I hope that you found this tutorial helpful. Cheerio! Hosted App Files on GitHub" />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/deploy.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-12-10T00:00:00-06:00" />
+<script type="application/ld+json">
+{"headline":"Deploying Web Apps in Julia","dateModified":"2019-12-10T00:00:00-06:00","description":"Note: Source Files on GitHub Tip: Preview Deployed Application In this blog, I’ll show how you can deploy a Dashboard written in Julia using Heroku, a free cloud storage platform. This is done under Google Code-In for Julia. Task Statement Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia. This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. Background The task states that the task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. I’d like to state that I did attempt to implement a dashboard written in python and put my life into it. However, the callback didn’t work and I couldn’t submit it. But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying your own dashboard (or webapp). Step 1 In this tutorial, I’ll be deploying this dash file. Let’s get started… Pre-requisites : A Heroku Account Your Files. (here, Dashboard files) Julia Installation Heroku CLI (Command Line Interface) I have uploaded the files at my GitHub Repository. Check them out here. Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through scoop (a package manager). Here’s how to do it. Install Scoop $ scoop install heroku-cli After the CLI is succesfully installed, run: $ heroku login A browser window will open, prompting you to login to your heroku account using a single button. eazze right ? Step 2 Create a new app through your Heroku Dashboard. Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do… I’ll assume that we named our project deploy-tutorial-plot. Don’t name this, it’s already the name of my app xD. Step 3 I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia env folder with a Project.toml and Manifest.toml. Read this to know how to create an enivironment in Julia. The Project and Manifestt .toml(s) contain information about your code: dependancies, versions, and author name. Let’s take web_dash as the folder containing my files. Hop into your cmd now to intialize a git rep in your folder. $ cd web_dash $ git init Now, connect your Heroku app with you local folder. This can be done by running $ git heroku git:remote -a deploy-tutorial-plot Put your app’s name after -a. Step 4 Now, to the working directory (here, your folder) add a Procfile. A Procfile is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform. web: julia --project web_dash.jl $PORT Here, web_dash.jl is your app file name. $PORT represents the PORT number heroku will be using for your application. At this point, your working directory must look like this: Folder PATH listing for volume RAVENCLAW Volume serial number is B4F9-8664 C:. Manifest.toml Procfile Project.toml web_dash.jl We still need to parse this PORT number on our script before starting the server. If we are using HTTP.jl we can replace the alreay existing hosting code in our file by the following : Replace HTTP.Sockets.localhost with &quot;0.0.0.0&quot; Replace /YOURPORTNUMBER/ with parse(Int,ARGS[1]) Ultimately, the ending of must look like this: handler = make_handler(app, debug = false) println(&quot;started at localhost:$(parse(Int, ARGS[1]))&quot;) HTTP.serve(handler,&quot;0.0.0.0&quot;,parse(Int,ARGS[1])) Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a BuildPack. Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime. Even though, Julia isn’t there on the Heroku Languages page; we have a julia-buildPack available at our disposal from here. https://github.com/Optomatica/heroku-buildpack-julia.git Paste this in buildpack row by moving to your app settings page on your heroku site. Final Step Now, we’re ready to commit and deploy our plot by pushing to Heroku. If you aren’t familiar with basic git commands to do this, please try to know them beforehand. (Trust me, they’re really helpful! You won’t regret learning more about it…) $ git status $ git add . $ git commit -m &quot;commit message&quot; $git push heroku master This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying. Enumerating objects: 6, done. Counting objects: 100% (6/6), done. Delta compression using up to 4 threads Compressing objects: 100% (5/5), done. Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done. Total 6 (delta 0), reused 0 (delta 0) remote: Compressing source files... done. remote: Building source: remote: remote: -----&gt; Julia app detected remote: -----&gt; Installing julia .... - julia-1.3.0-linux-x86_64.tar.gz . . . remote: -----&gt; Compressing... remote: Done: 364.6M remote: -----&gt; Launching... remote: ! Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time. remote: Released v3 remote: https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku remote: remote: Verifying deploy... done. To https://git.heroku.com/deploy-tutorial-plot.git * [new branch] master -&gt; master Phew, so if everything went awesome on your part too, you can see your app hosted at [app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/). I hope that you found this tutorial helpful. Cheerio! Hosted App Files on GitHub","datePublished":"2019-12-10T00:00:00-06:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/deploy.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html"},"url":"https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deploying Web Apps in Julia | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Deploying Web Apps in Julia" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Note: Source Files on GitHub Tip: Preview Deployed Application In this blog, I’ll show how you can deploy a Dashboard written in Julia using Heroku, a free cloud storage platform. This is done under Google Code-In for Julia. Task Statement Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia. This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. Background The task states that the task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. I’d like to state that I did attempt to implement a dashboard written in python and put my life into it. However, the callback didn’t work and I couldn’t submit it. But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying your own dashboard (or webapp). Step 1 In this tutorial, I’ll be deploying this dash file. Let’s get started… Pre-requisites : A Heroku Account Your Files. (here, Dashboard files) Julia Installation Heroku CLI (Command Line Interface) I have uploaded the files at my GitHub Repository. Check them out here. Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through scoop (a package manager). Here’s how to do it. Install Scoop $ scoop install heroku-cli After the CLI is succesfully installed, run: $ heroku login A browser window will open, prompting you to login to your heroku account using a single button. eazze right ? Step 2 Create a new app through your Heroku Dashboard. Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do… I’ll assume that we named our project deploy-tutorial-plot. Don’t name this, it’s already the name of my app xD. Step 3 I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia env folder with a Project.toml and Manifest.toml. Read this to know how to create an enivironment in Julia. The Project and Manifestt .toml(s) contain information about your code: dependancies, versions, and author name. Let’s take web_dash as the folder containing my files. Hop into your cmd now to intialize a git rep in your folder. $ cd web_dash $ git init Now, connect your Heroku app with you local folder. This can be done by running $ git heroku git:remote -a deploy-tutorial-plot Put your app’s name after -a. Step 4 Now, to the working directory (here, your folder) add a Procfile. A Procfile is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform. web: julia --project web_dash.jl $PORT Here, web_dash.jl is your app file name. $PORT represents the PORT number heroku will be using for your application. At this point, your working directory must look like this: Folder PATH listing for volume RAVENCLAW Volume serial number is B4F9-8664 C:. Manifest.toml Procfile Project.toml web_dash.jl We still need to parse this PORT number on our script before starting the server. If we are using HTTP.jl we can replace the alreay existing hosting code in our file by the following : Replace HTTP.Sockets.localhost with &quot;0.0.0.0&quot; Replace /YOURPORTNUMBER/ with parse(Int,ARGS[1]) Ultimately, the ending of must look like this: handler = make_handler(app, debug = false) println(&quot;started at localhost:$(parse(Int, ARGS[1]))&quot;) HTTP.serve(handler,&quot;0.0.0.0&quot;,parse(Int,ARGS[1])) Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a BuildPack. Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime. Even though, Julia isn’t there on the Heroku Languages page; we have a julia-buildPack available at our disposal from here. https://github.com/Optomatica/heroku-buildpack-julia.git Paste this in buildpack row by moving to your app settings page on your heroku site. Final Step Now, we’re ready to commit and deploy our plot by pushing to Heroku. If you aren’t familiar with basic git commands to do this, please try to know them beforehand. (Trust me, they’re really helpful! You won’t regret learning more about it…) $ git status $ git add . $ git commit -m &quot;commit message&quot; $git push heroku master This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying. Enumerating objects: 6, done. Counting objects: 100% (6/6), done. Delta compression using up to 4 threads Compressing objects: 100% (5/5), done. Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done. Total 6 (delta 0), reused 0 (delta 0) remote: Compressing source files... done. remote: Building source: remote: remote: -----&gt; Julia app detected remote: -----&gt; Installing julia .... - julia-1.3.0-linux-x86_64.tar.gz . . . remote: -----&gt; Compressing... remote: Done: 364.6M remote: -----&gt; Launching... remote: ! Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time. remote: Released v3 remote: https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku remote: remote: Verifying deploy... done. To https://git.heroku.com/deploy-tutorial-plot.git * [new branch] master -&gt; master Phew, so if everything went awesome on your part too, you can see your app hosted at [app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/). I hope that you found this tutorial helpful. Cheerio! Hosted App Files on GitHub" />
+<meta property="og:description" content="Note: Source Files on GitHub Tip: Preview Deployed Application In this blog, I’ll show how you can deploy a Dashboard written in Julia using Heroku, a free cloud storage platform. This is done under Google Code-In for Julia. Task Statement Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia. This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. Background The task states that the task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. I’d like to state that I did attempt to implement a dashboard written in python and put my life into it. However, the callback didn’t work and I couldn’t submit it. But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying your own dashboard (or webapp). Step 1 In this tutorial, I’ll be deploying this dash file. Let’s get started… Pre-requisites : A Heroku Account Your Files. (here, Dashboard files) Julia Installation Heroku CLI (Command Line Interface) I have uploaded the files at my GitHub Repository. Check them out here. Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through scoop (a package manager). Here’s how to do it. Install Scoop $ scoop install heroku-cli After the CLI is succesfully installed, run: $ heroku login A browser window will open, prompting you to login to your heroku account using a single button. eazze right ? Step 2 Create a new app through your Heroku Dashboard. Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do… I’ll assume that we named our project deploy-tutorial-plot. Don’t name this, it’s already the name of my app xD. Step 3 I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia env folder with a Project.toml and Manifest.toml. Read this to know how to create an enivironment in Julia. The Project and Manifestt .toml(s) contain information about your code: dependancies, versions, and author name. Let’s take web_dash as the folder containing my files. Hop into your cmd now to intialize a git rep in your folder. $ cd web_dash $ git init Now, connect your Heroku app with you local folder. This can be done by running $ git heroku git:remote -a deploy-tutorial-plot Put your app’s name after -a. Step 4 Now, to the working directory (here, your folder) add a Procfile. A Procfile is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform. web: julia --project web_dash.jl $PORT Here, web_dash.jl is your app file name. $PORT represents the PORT number heroku will be using for your application. At this point, your working directory must look like this: Folder PATH listing for volume RAVENCLAW Volume serial number is B4F9-8664 C:. Manifest.toml Procfile Project.toml web_dash.jl We still need to parse this PORT number on our script before starting the server. If we are using HTTP.jl we can replace the alreay existing hosting code in our file by the following : Replace HTTP.Sockets.localhost with &quot;0.0.0.0&quot; Replace /YOURPORTNUMBER/ with parse(Int,ARGS[1]) Ultimately, the ending of must look like this: handler = make_handler(app, debug = false) println(&quot;started at localhost:$(parse(Int, ARGS[1]))&quot;) HTTP.serve(handler,&quot;0.0.0.0&quot;,parse(Int,ARGS[1])) Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a BuildPack. Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime. Even though, Julia isn’t there on the Heroku Languages page; we have a julia-buildPack available at our disposal from here. https://github.com/Optomatica/heroku-buildpack-julia.git Paste this in buildpack row by moving to your app settings page on your heroku site. Final Step Now, we’re ready to commit and deploy our plot by pushing to Heroku. If you aren’t familiar with basic git commands to do this, please try to know them beforehand. (Trust me, they’re really helpful! You won’t regret learning more about it…) $ git status $ git add . $ git commit -m &quot;commit message&quot; $git push heroku master This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying. Enumerating objects: 6, done. Counting objects: 100% (6/6), done. Delta compression using up to 4 threads Compressing objects: 100% (5/5), done. Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done. Total 6 (delta 0), reused 0 (delta 0) remote: Compressing source files... done. remote: Building source: remote: remote: -----&gt; Julia app detected remote: -----&gt; Installing julia .... - julia-1.3.0-linux-x86_64.tar.gz . . . remote: -----&gt; Compressing... remote: Done: 364.6M remote: -----&gt; Launching... remote: ! Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time. remote: Released v3 remote: https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku remote: remote: Verifying deploy... done. To https://git.heroku.com/deploy-tutorial-plot.git * [new branch] master -&gt; master Phew, so if everything went awesome on your part too, you can see your app hosted at [app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/). I hope that you found this tutorial helpful. Cheerio! Hosted App Files on GitHub" />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/deploy.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-12-10T00:00:00-06:00" />
+<script type="application/ld+json">
+{"headline":"Deploying Web Apps in Julia","dateModified":"2019-12-10T00:00:00-06:00","description":"Note: Source Files on GitHub Tip: Preview Deployed Application In this blog, I’ll show how you can deploy a Dashboard written in Julia using Heroku, a free cloud storage platform. This is done under Google Code-In for Julia. Task Statement Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia. This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. Background The task states that the task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl. I’d like to state that I did attempt to implement a dashboard written in python and put my life into it. However, the callback didn’t work and I couldn’t submit it. But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying your own dashboard (or webapp). Step 1 In this tutorial, I’ll be deploying this dash file. Let’s get started… Pre-requisites : A Heroku Account Your Files. (here, Dashboard files) Julia Installation Heroku CLI (Command Line Interface) I have uploaded the files at my GitHub Repository. Check them out here. Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through scoop (a package manager). Here’s how to do it. Install Scoop $ scoop install heroku-cli After the CLI is succesfully installed, run: $ heroku login A browser window will open, prompting you to login to your heroku account using a single button. eazze right ? Step 2 Create a new app through your Heroku Dashboard. Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do… I’ll assume that we named our project deploy-tutorial-plot. Don’t name this, it’s already the name of my app xD. Step 3 I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia env folder with a Project.toml and Manifest.toml. Read this to know how to create an enivironment in Julia. The Project and Manifestt .toml(s) contain information about your code: dependancies, versions, and author name. Let’s take web_dash as the folder containing my files. Hop into your cmd now to intialize a git rep in your folder. $ cd web_dash $ git init Now, connect your Heroku app with you local folder. This can be done by running $ git heroku git:remote -a deploy-tutorial-plot Put your app’s name after -a. Step 4 Now, to the working directory (here, your folder) add a Procfile. A Procfile is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform. web: julia --project web_dash.jl $PORT Here, web_dash.jl is your app file name. $PORT represents the PORT number heroku will be using for your application. At this point, your working directory must look like this: Folder PATH listing for volume RAVENCLAW Volume serial number is B4F9-8664 C:. Manifest.toml Procfile Project.toml web_dash.jl We still need to parse this PORT number on our script before starting the server. If we are using HTTP.jl we can replace the alreay existing hosting code in our file by the following : Replace HTTP.Sockets.localhost with &quot;0.0.0.0&quot; Replace /YOURPORTNUMBER/ with parse(Int,ARGS[1]) Ultimately, the ending of must look like this: handler = make_handler(app, debug = false) println(&quot;started at localhost:$(parse(Int, ARGS[1]))&quot;) HTTP.serve(handler,&quot;0.0.0.0&quot;,parse(Int,ARGS[1])) Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a BuildPack. Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime. Even though, Julia isn’t there on the Heroku Languages page; we have a julia-buildPack available at our disposal from here. https://github.com/Optomatica/heroku-buildpack-julia.git Paste this in buildpack row by moving to your app settings page on your heroku site. Final Step Now, we’re ready to commit and deploy our plot by pushing to Heroku. If you aren’t familiar with basic git commands to do this, please try to know them beforehand. (Trust me, they’re really helpful! You won’t regret learning more about it…) $ git status $ git add . $ git commit -m &quot;commit message&quot; $git push heroku master This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying. Enumerating objects: 6, done. Counting objects: 100% (6/6), done. Delta compression using up to 4 threads Compressing objects: 100% (5/5), done. Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done. Total 6 (delta 0), reused 0 (delta 0) remote: Compressing source files... done. remote: Building source: remote: remote: -----&gt; Julia app detected remote: -----&gt; Installing julia .... - julia-1.3.0-linux-x86_64.tar.gz . . . remote: -----&gt; Compressing... remote: Done: 364.6M remote: -----&gt; Launching... remote: ! Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time. remote: Released v3 remote: https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku remote: remote: Verifying deploy... done. To https://git.heroku.com/deploy-tutorial-plot.git * [new branch] master -&gt; master Phew, so if everything went awesome on your part too, you can see your app hosted at [app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/). I hope that you found this tutorial helpful. Cheerio! Hosted App Files on GitHub","datePublished":"2019-12-10T00:00:00-06:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/deploy.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html"},"url":"https://pseudocodenerd.github.io/blog/gci19/2019/12/10/deplying_dashboards_heroku.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Madhav&#39;s CS Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Deploying Web Apps in Julia</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2019-12-10T00:00:00-06:00" itemprop="datePublished">
+        Dec 10, 2019
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#gci19">gci19</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>Note: Source Files on <a href="https://github.com/PseudoCodeNerd/deploy_a_dashboard">GitHub</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Tip: Preview <a href="https://deploy-tutorial-plot.herokuapp.com/">Deployed Application</a></p>
+</blockquote>
+
+<p>In this blog, I’ll show how you can deploy a Dashboard written in <code class="highlighter-rouge">Julia</code> using <a href="https://heroku.com/">Heroku</a>, a free cloud storage platform. This is done under Google Code-In for Julia.</p>
+
+<h3 id="task-statement">Task Statement</h3>
+
+<p>Deploy an instance of a dashboard created with Dashboards.jl and publish it to a free service like Heroku. Contribute instructions on how others can do this to Dashboards.jl. See this blog post for info on how to publish a web app in Julia.</p>
+
+<p><em>This task is best done by someone who has already completed Create a sample dashboard with Dashboards.jl.</em></p>
+
+<h3 id="background">Background</h3>
+
+<p>The task states that the task is best done by someone who has already completed <em>Create a sample dashboard with Dashboards.jl</em>. 
+I’d like to state that I did attempt to implement a dashboard written in <code class="highlighter-rouge">python</code> and put my life into it. However, the callback didn’t work and I couldn’t submit it.</p>
+
+<p>But be assured, in the process of creating that Dashboard, I learnt all the fundamentals and am capable of guiding you in deploying  your own dashboard (or webapp).</p>
+
+<hr />
+
+<h2 id="step-1">Step 1</h2>
+
+<p>In this tutorial, I’ll be deploying <a href="https://github.com/waralex/DashboardsExamples/blob/master/dash_tutorial/3_basic_dash_callbacks_2.jl">this</a> dash file.
+Let’s get started…</p>
+
+<p>Pre-requisites :</p>
+
+<ol>
+  <li>A <a href="https://heroku.com/">Heroku</a> Account</li>
+  <li>Your Files. (here, Dashboard files)</li>
+  <li><a href="https://julialang.org/downloads/">Julia</a> Installation</li>
+  <li><a href="https://devcenter.heroku.com/articles/heroku-cli">Heroku CLI</a> (Command Line Interface)</li>
+</ol>
+
+<p>I have uploaded the files at my GitHub Repository. Check them out <a href="https://github.com/PseudoCodeNerd/deploy_a_dashboard">here</a>.</p>
+
+<p>Windows users may have problems with installing Heroku CLI on their systems. I too faced a problem with the %PATH% variables. I’d like to suggest you too install heroku-cli through <a href="https://scoop.sh">scoop</a> (a package manager). Here’s how to do it.</p>
+
+<ul>
+  <li><a href="https://www.onmsft.com/how-to/how-to-install-the-scoop-package-manager-in-windows-10">Install Scoop</a></li>
+  <li><code class="highlighter-rouge">$ scoop install heroku-cli</code></li>
+</ul>
+
+<p>After the CLI is succesfully installed, run:</p>
+
+<p><code class="highlighter-rouge">$ heroku login</code></p>
+
+<p>A browser window will open, prompting you to login to your heroku account using a single button. eazze right ?</p>
+
+<hr />
+
+<h2 id="step-2">Step 2</h2>
+
+<p>Create a new <strong>app</strong> through your Heroku Dashboard. 
+Note that only names with letters and dashes are allowed. Once you’ve named it, return to your jolly old command prompt. We got stuff to do…</p>
+
+<p><em>I’ll assume that we named our project <code class="highlighter-rouge">deploy-tutorial-plot</code>.</em></p>
+
+<p>Don’t name this, it’s already the name of my app xD.</p>
+
+<hr />
+
+<h2 id="step-3">Step 3</h2>
+
+<p>I’m assuming that whatever app you’re trying to deploy, it’s already in it’s own Julia <code class="highlighter-rouge">env</code> folder with a <code class="highlighter-rouge">Project.toml</code> and <code class="highlighter-rouge">Manifest.toml</code>. Read <a href="https://julialang.github.io/Pkg.jl/stable/environments/">this</a> to know how to create an enivironment in Julia.</p>
+
+<p>The Project and Manifestt <code class="highlighter-rouge">.toml</code>(s) contain information about your code: dependancies, versions, and author name.</p>
+
+<p>Let’s take <code class="highlighter-rouge">web_dash</code> as the folder containing my files.
+Hop into your <code class="highlighter-rouge">cmd</code> now to intialize a git rep in your folder.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span><span class="nb">cd </span>web_dash
+<span class="gp">$</span><span class="w"> </span>git init
+</code></pre></div></div>
+<p>Now, connect your Heroku app with you local folder. This can be done by running</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>git heroku git:remote <span class="nt">-a</span> deploy-tutorial-plot
+</code></pre></div></div>
+
+<p><em>Put your app’s name after <code class="highlighter-rouge">-a</code>.</em></p>
+
+<hr />
+
+<h2 id="step-4">Step 4</h2>
+
+<p>Now, to the working directory (here, your folder) add a <code class="highlighter-rouge">Procfile</code>.</p>
+
+<p>A <code class="highlighter-rouge">Procfile</code> is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">web: julia --project web_dash.jl $</span>PORT
+</code></pre></div></div>
+
+<p>Here,<br />
+<code class="highlighter-rouge">web_dash.jl</code> is your app file name.<br /> <code class="highlighter-rouge">$PORT </code>represents the PORT number heroku will be using for your application.</p>
+
+<p>At this point, your working directory must look like this:</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">Folder PATH listing for volume RAVENCLAW
+Volume serial number is B4F9-8664
+C:.
+    Manifest.toml
+    Procfile
+    Project.toml
+    web_dash.jl
+</span></code></pre></div></div>
+
+<p>We still need to parse this PORT number on our script before starting the server. If we are using <code class="highlighter-rouge">HTTP.jl</code> we can replace the alreay existing hosting code in our file by the following :</p>
+
+<p>Replace <code class="highlighter-rouge">HTTP.Sockets.localhost</code> with <code class="highlighter-rouge">"0.0.0.0"</code></p>
+
+<p>Replace <code class="highlighter-rouge">/YOURPORTNUMBER/</code> with <code class="highlighter-rouge">parse(Int,ARGS[1])</code></p>
+
+<p>Ultimately, the ending of must look like this:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">handler</span> <span class="o">=</span> <span class="n">make_handler</span><span class="x">(</span><span class="n">app</span><span class="x">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="nb">false</span><span class="x">)</span>
+<span class="n">println</span><span class="x">(</span><span class="s">"started at localhost:</span><span class="si">$</span><span class="s">(parse(Int, ARGS[1]))"</span><span class="x">)</span>
+<span class="n">HTTP</span><span class="o">.</span><span class="n">serve</span><span class="x">(</span><span class="n">handler</span><span class="x">,</span><span class="s">"0.0.0.0"</span><span class="x">,</span><span class="n">parse</span><span class="x">(</span><span class="kt">Int</span><span class="x">,</span><span class="nb">ARGS</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
+</code></pre></div></div>
+
+<p>Also, before putting up our files on the cloud, we need to tell Heroku what language we’re putting forwards. This is accomplished using a <code class="highlighter-rouge">BuildPack</code>.</p>
+
+<p>Heroku Buildpacks determine the build process for an app, and which assets and runtimes should be made available to your code at runtime. Buildpacks enable you to extend Heroku’s build system to support your language or customizations, or to make particular binary packages available to the runtime.</p>
+
+<p>Even though, Julia isn’t there on the Heroku Languages page; we have a <code class="highlighter-rouge">julia-buildPack</code> available at our disposal from <a href="https://github.com/Optomatica/heroku-buildpack-julia">here</a>.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">https://github.com/Optomatica/heroku-buildpack-julia.git
+</span></code></pre></div></div>
+
+<p>Paste this in buildpack row by moving to your app settings page on your heroku site.</p>
+
+<hr />
+
+<h2 id="final-step">Final Step</h2>
+
+<p>Now, we’re ready to commit and deploy our plot by pushing to Heroku.</p>
+
+<p>If you aren’t familiar with basic git commands to do this, please try to know them beforehand.</p>
+
+<p>(Trust me, they’re really helpful! You won’t regret learning more about it…)</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>git status
+<span class="gp">$</span><span class="w"> </span>git add <span class="nb">.</span>
+<span class="gp">$</span><span class="w"> </span>git commit <span class="nt">-m</span> <span class="s2">"commit message"</span>
+<span class="gp">$</span>git push heroku master
+</code></pre></div></div>
+
+<p>This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (6/6), 6.47 KiB | 947.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0)
+remote: Compressing source files... done.
+remote: Building source:
+remote:
+</span><span class="gp">remote: -----&gt;</span><span class="w"> </span>Julia app detected
+<span class="gp">remote: -----&gt;</span><span class="w"> </span>Installing julia ....        - julia-1.3.0-linux-x86_64.tar.gz
+<span class="go">
+</span><span class="c">.
+.
+.
+</span><span class="go">
+</span><span class="gp">remote: -----&gt;</span><span class="w"> </span>Compressing...
+<span class="go">remote:        Done: 364.6M
+</span><span class="gp">remote: -----&gt;</span><span class="w"> </span>Launching...
+<span class="go">remote:  !     Warning: Your slug size (364 MB) exceeds our soft limit (300 MB) which may affect boot time.
+remote:        Released v3
+remote:        https://deploy-tutorial-plot.herokuapp.com/ deployed to Heroku
+remote:
+remote: Verifying deploy... done.
+To https://git.heroku.com/deploy-tutorial-plot.git
+</span><span class="gp"> * [new branch]      master -&gt;</span><span class="w"> </span>master
+</code></pre></div></div>
+
+<p>Phew, so if everything went <em>awesome</em> on your part too, you can see your app hosted at <code class="highlighter-rouge">[app-name.herokuapp.com](https://deploy-tutorial-plot.herokuapp.com/)</code>.</p>
+
+<p>I hope that you found this tutorial helpful.</p>
+
+<h3 id="cheerio">Cheerio!</h3>
+
+<hr />
+
+<p><a href="https://deploy-tutorial-plot.herokuapp.com/">Hosted App</a></p>
+
+<p><a href="https://github.com/PseudoCodeNerd/deploy_a_dashboard">Files on GitHub</a></p>
+
+
+  </div><a class="u-url" href="/blog/gci19/2019/12/10/deplying_dashboards_heroku.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>All my activities and experiences in one place-mostly ML stuff.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/pseudocodenerd" title="pseudocodenerd"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/sharmadhavs" title="sharmadhavs"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
