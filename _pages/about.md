@@ -2,12 +2,14 @@
 layout: page
 title: About Me
 permalink: /about/
+image: images/me.jpg
 ---
 
-This is where you put the contents of your *About* page. Like all your pages, it's in [Markdown](https://guides.github.com/features/mastering-markdown/) format.
+![]({{ site.baseurl }}/images/me.jpg "That's me !")
 
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
+I am a high school junior from India and a programmer, web-developer and Machine Learning Enthusiast. I’m particularly excited about probabilistic machine learning and deep neural networks.
 
+This blog however is mostly a Computer Science Research blog for my weekend experiments with ML/DL in general.
+Feel free to go through it and hit me up if you find something that excites you too!
 
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
+This website is powered by **[fastpages](https://github.com/fastai/fastpages)**

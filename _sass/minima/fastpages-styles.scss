@@ -1,5 +1,7 @@
 //Default Overrides For Styles In Minima 
 // If you wish to override any of this CSS, do so in _sass/minima/custom-styles.css
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:400,400i,700|Ubuntu:400,400i,700&display=swap');
+@import url('https://rsms.me/inter/inter.css');
 
 .post img {
         display: block;
@@ -19,13 +21,13 @@
 .page-content {
         -webkit-font-smoothing: antialiased !important;
         text-rendering: optimizeLegibility !important;
-        font-family: "Segoe UI", SegoeUI, Roboto, "Segoe WP", "Helvetica Neue", "Helvetica", "Tahoma", "Arial", sans-serif !important;
+        font-family: 'Inter',"Segoe UI", SegoeUI, Roboto, "Segoe WP", 'IBM Plex Sans' , sans-serif !important;
 }
 
 // make non-headings slightly lighter
 .post-content p, .post-content li {
    font-size: 20px;
-   color: #515151;
+   color: #161616;
 }
 
 .post-link{
@@ -139,13 +141,13 @@ h6:hover .anchor-link {
 .post-meta-title, .post-meta{
   margin-top: .25em !important;
   margin-bottom: .25em !important;
-  font-size: 105%;
+  font-size: 100%;
 }
 
 .page-description {
   margin-top: .5rem !important;
   margin-bottom: .5rem !important;
-  color: #585858;
+  color: #161616;
   font-size: 115%;
 }
 
@@ -209,7 +211,7 @@ table {
 // customize scrollbars
 ::-webkit-scrollbar {
   width: 14px;
-  height: 18px;
+  height: 14px;
 }
 ::-webkit-scrollbar-thumb {
   height: 6px;
