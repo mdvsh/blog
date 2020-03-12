@@ -9,10 +9,8 @@ hide: false
 search_exclude: false
 categories: [gci19]
 ---
+> Tip: Preview [Deployed Application.](https://deploy-tutorial-plot.herokuapp.com/)
 
-> Note: Source Files on [GitHub](https://github.com/PseudoCodeNerd/deploy_a_dashboard)
-
-> Tip: Preview [Deployed Application](https://deploy-tutorial-plot.herokuapp.com/)
 
 In this blog, I'll show how you can deploy a Dashboard written in `Julia` using [Heroku](https://heroku.com/), a free cloud storage platform. This is done under Google Code-In for Julia.
 
@@ -56,7 +54,7 @@ After the CLI is succesfully installed, run:
 
 A browser window will open, prompting you to login to your heroku account using a single button. eazze right ?
 
-<hr>
+---
 
 ## Step 2
 
@@ -67,7 +65,7 @@ Note that only names with letters and dashes are allowed. Once you've named it, 
 
 Don't name this, it's already the name of my app xD.
 
-<hr>
+---
 
 ## Step 3
 
@@ -78,7 +76,7 @@ The Project and Manifestt `.toml`(s) contain information about your code: depend
 Let's take `web_dash` as the folder containing my files.
 Hop into your `cmd` now to intialize a git rep in your folder.
 
-```console
+```python
 $ cd web_dash
 $ git init
 ```
@@ -90,7 +88,7 @@ $ git heroku git:remote -a deploy-tutorial-plot
 
 *Put your app's name after `-a`.*
 
-<hr>
+---
 
 ## Step 4
 
@@ -98,7 +96,7 @@ Now, to the working directory (here, your folder) add a `Procfile`.
 
 A `Procfile` is a mechanism for declaring what commands are run by your application’s dynos on the Heroku platform.
 
-```console
+```python
 web: julia --project web_dash.jl $PORT
 ```
 
@@ -107,7 +105,7 @@ Here,<br>
 
 At this point, your working directory must look like this:
 
-```console
+```python
 Folder PATH listing for volume RAVENCLAW
 Volume serial number is B4F9-8664
 C:.
@@ -137,13 +135,11 @@ Heroku Buildpacks determine the build process for an app, and which assets and r
 
 Even though, Julia isn't there on the Heroku Languages page; we have a `julia-buildPack` available at our disposal from [here](https://github.com/Optomatica/heroku-buildpack-julia).
 
-```console
-https://github.com/Optomatica/heroku-buildpack-julia.git
-```
+`https://github.com/Optomatica/heroku-buildpack-julia.git`
 
 Paste this in buildpack row by moving to your app settings page on your heroku site.
 
-<hr>
+---
 
 ## Final Step
 
@@ -153,7 +149,7 @@ If you aren't familiar with basic git commands to do this, please try to know th
 
 (Trust me, they're really helpful! You won't regret learning more about it...)
 
-```console
+```python
 $ git status
 $ git add .
 $ git commit -m "commit message"
@@ -162,7 +158,7 @@ $git push heroku master
 
 This should prompt heroku to start building your web-app.Putting the results here too because I found i oddlySatisfying.
 
-```console
+```python
 Enumerating objects: 6, done.
 Counting objects: 100% (6/6), done.
 Delta compression using up to 4 threads
@@ -197,7 +193,7 @@ I hope that you found this tutorial helpful.
 
 ### Cheerio!
 
-<hr>
+---
 
 [Hosted App](https://deploy-tutorial-plot.herokuapp.com/) 
 
