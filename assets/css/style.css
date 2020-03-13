@@ -424,7 +424,9 @@ table td { text-overflow: ellipsis; overflow: hidden; max-width: 15em; }
 
 ::-webkit-scrollbar-corner { background-color: transparent; }
 
-.output_text.output_execute_result pre { white-space: pre-wrap; }
+.output_text.output_execute_result pre { white-space: pre-wrap; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace; border-radius: 5px; }
+
+pre { white-space: pre-wrap; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace; font-size: 108%; }
 
 /*-----------------------------------*/
 /*----- ADD YOUR STYLES BELOW -------*/
@@ -436,13 +438,13 @@ table td { text-overflow: ellipsis; overflow: hidden; max-width: 15em; }
 
 .language-python + .language-plaintext pre { background-color: white !important; }
 
-.input_area pre, .input_area div { margin-bottom: 2rem !important; margin-top: 1.5rem !important; padding-bottom: 0 !important; padding-top: 0 !important; background: #323443 !important; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace; border-radius: 5px; font-size: 100%; }
+.input_area pre, .input_area div { margin-bottom: 2rem !important; margin-top: 1.5rem !important; padding-bottom: 0 !important; padding-top: 0 !important; background: #323443 !important; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace; border-radius: 5px; font-size: 105%; }
 
 .output_area pre, .output_area div { margin-bottom: 1rem !important; margin-top: 1rem !important; padding-bottom: 0 !important; padding-top: 0 !important; }
 
 .input_area pre { border-left: 1px solid lightcoral; }
 
-.output_area pre { border-left: 1px solid grey; margin-left: 1rem !important; }
+.output_area pre { border-left: 1px solid #F2F2F2; margin-left: 1rem !important; font-size: 105% !important; }
 
 .code_cell table { width: auto; }
 
