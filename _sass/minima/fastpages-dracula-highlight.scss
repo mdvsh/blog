@@ -42,7 +42,7 @@ $dt-green-light: rgb(172, 229, 145);
     text-rendering: optimizeLegibility;
     font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace;
     border-radius: 5px;
-    font-size: 100%;
+    font-size: 105%;
 }
 .output_area pre, .output_area div {
     margin-bottom:1rem !important;
@@ -54,8 +54,9 @@ $dt-green-light: rgb(172, 229, 145);
     border-left: 1px solid lightcoral;
 }
 .output_area pre {
-    border-left: 1px solid grey;
+    border-left: 1px solid #F2F2F2;
     margin-left: 1rem !important;
+    font-size: 105% !important;
 }
 
 .code_cell table { width: auto; }

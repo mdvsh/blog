@@ -8,9 +8,9 @@ image: images/deploy.png
 hide: false
 search_exclude: false
 categories: [gci19]
----
-> Tip: Preview [Deployed Application.](https://deploy-tutorial-plot.herokuapp.com/)
+--- 
 
+{% include info.html text="Preview at https://deploy-tutorial-plot.herokuapp.com/" %}
 
 In this blog, I'll show how you can deploy a Dashboard written in `Julia` using [Heroku](https://heroku.com/), a free cloud storage platform. This is done under Google Code-In for Julia.
 

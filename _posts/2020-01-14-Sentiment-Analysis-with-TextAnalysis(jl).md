@@ -32,11 +32,10 @@ layout: notebook
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>Link: Part 2 of this notebook is accomplished with TensorFlow and can be<a href="https://gist.github.com/PseudoCodeNerd/493a3f477bd97fc15b24c853e7de7d9c">found here.</a>## Task Description 
-Use the amazon review data from Kaggle to test the efficiency of our Sentiment Analysis models that live in TextAnalysis.jl. Compare it with models in ScikitLearn and Spacy python libraries. Upload your results as an issue in the TextAnalysis package.</p>
-</blockquote>
+<p>{% include note.html content='Part 2 of this notebook is accomplished with TensorFlow and can be <a href="https://gist.github.com/PseudoCodeNerd/493a3f477bd97fc15b24c853e7de7d9c">found here.</a>' %}</p>
+<h2 id="Task-Description">Task Description<a class="anchor-link" href="#Task-Description"> </a></h2><p>Use the amazon review data from Kaggle to test the efficiency of our Sentiment Analysis models that live in TextAnalysis.jl. Compare it with models in ScikitLearn and Spacy python libraries. Upload your results as an issue in the TextAnalysis package.</p>
 <p>Some basic machine learning knowledge is useful for this task.</p>
-<h3 id="Special-thanks-to-Ayush-Kaushal;-an-exemplary-mentor-without-whom-this-task-wouldn't-be-possible.">Special thanks to Ayush Kaushal; an exemplary mentor without whom this task wouldn't be possible.<a class="anchor-link" href="#Special-thanks-to-Ayush-Kaushal;-an-exemplary-mentor-without-whom-this-task-wouldn't-be-possible."> </a></h3><p>Find below, the <code>julia</code> part of the task. The python notebook would be attached too but would have sparse documentation.</p>
+<h4 id="Special-thanks-to-Ayush-Kaushal;-an-exemplary-mentor-without-whom-this-task-wouldn't-be-possible.">Special thanks to Ayush Kaushal; an exemplary mentor without whom this task wouldn't be possible.<a class="anchor-link" href="#Special-thanks-to-Ayush-Kaushal;-an-exemplary-mentor-without-whom-this-task-wouldn't-be-possible."> </a></h4><p>Find below, the <code>julia</code> part of the task. The python notebook would be attached too but would have sparse documentation.</p>
 <blockquote><p>The process of algorithmically identifying and categorizing opinions expressed in text to determine the user’s attitude toward the subject of the document (or post).</p>
 </blockquote>
 <p>This is how I understand it.</p>
