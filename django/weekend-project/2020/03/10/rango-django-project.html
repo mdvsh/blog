@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Rango - A Web Directory for anything. | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Rango - A Web Directory for anything." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Project made while learning Django." />
+<meta property="og:description" content="Project made while learning Django." />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/rango-logo.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-10T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Rango - A Web Directory for anything.","dateModified":"2020-03-10T00:00:00-05:00","description":"Project made while learning Django.","datePublished":"2020-03-10T00:00:00-05:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/rango-logo.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html"},"url":"https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Rango - A Web Directory for anything. | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Rango - A Web Directory for anything." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Project made while learning Django." />
+<meta property="og:description" content="Project made while learning Django." />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/rango-logo.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-10T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Rango - A Web Directory for anything.","dateModified":"2020-03-10T00:00:00-05:00","description":"Project made while learning Django.","datePublished":"2020-03-10T00:00:00-05:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/rango-logo.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html"},"url":"https://pseudocodenerd.github.io/blog/django/weekend-project/2020/03/10/rango-django-project.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Madhav&#39;s CS Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Rango - A Web Directory for anything.</h1><p class="page-description">Project made while learning Django.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-03-10T00:00:00-05:00" itemprop="datePublished">
+        Mar 10, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#django">django</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#weekend-project">weekend-project</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#how-it-all-started-">How it all started ?</a></li>
+<li class="toc-entry toc-h2"><a href="#enter-django">Enter Django.</a></li>
+<li class="toc-entry toc-h2"><a href="#stuff-learnt">Stuff Learnt.</a></li>
+<li class="toc-entry toc-h2"><a href="#putting-it-all-together">Putting it all together.</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#preview-the-website-here">Preview the website here</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#fin">Fin.</a></li>
+</ul><div class="Toast">
+   <span class="Toast-icon"><svg class="octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>
+   <span class="Toast-content">https://pseudocodenerd.pythonanywhere.com/</span>
+</div>
+
+<h2 id="how-it-all-started-">
+<a class="anchor" href="#how-it-all-started-" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it all started ?</h2>
+
+<p>I always wanted to learn backend web development to compliment the <em>front-end only</em> websites I built to make them <em>more dynamic, interactive and complex</em> (?). I initially experimented with <a href="https://expressjs.com/">ExpressJS</a> but came to the conclusion that I lacked enough JS knowledge to make complex stuff in/with it. Later, a friend of mine suggested me to try Ruby on Rails (through <a href="https://www.theodinproject.com/courses/ruby-on-rails">The ODIN Project</a> of course) but I never quite understod the Model-View-Controller design pattern / approach it advocated. Also, I remained hesitant to get the Ruby syntax into my framework.</p>
+
+<h2 id="enter-django">
+<a class="anchor" href="#enter-django" aria-hidden="true"><span class="octicon octicon-link"></span></a>Enter Django.</h2>
+<p><em>initially Flask for me though.</em></p>
+
+<p>I was pretty good with python and the thought of using it in my websites to implement logic was <em>sweet</em>. At this time, I was only beginning to read through the official docs when another good friend of mine told me about this book (<a href="https://www.tangowithdjango.com/">Tango with Django</a>) to learn Django and how <strong>awesome</strong> and practical it was in teaching Django from the groundup.</p>
+
+<p>I had never <strong><em>read</em> a book</strong> for the sake of learning some new tech and was really curious as to how things would be. I had plenty of time to devote to learning Django as my Junior Year had just ended and we had a month long break until Senior Year started. So I started reading the book…</p>
+
+<p>And Oh Boy! it was really EPIC. It provided <strong>just the right amount of theory</strong> in each meticulously divided chapter to cover all of Django and also had exercises to implement what we had learnt in each chapter and even a <strong>testing script</strong> to check our implementation. It <em>made the learning curve way easier than what the official docs offered</em>. Enough about the book, let’s dive into what I did over my ~3 week journey.</p>
+
+<h2 id="stuff-learnt">
+<a class="anchor" href="#stuff-learnt" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stuff Learnt.</h2>
+<p>I kept track of my daily chapterwise progress through git and the commits were done after <strong>passing all tests</strong>. The commit history allows me to see how I increasingly made my django application from complex starting from the groundup. Here is a brief overview of the awesome new concepts I learnt:</p>
+
+<ul>
+  <li>Basics of Django: setup, architecture, views, urls, etc. // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/5f734361f1dcaee8e7ac6368033317355f15353c">Code then</a>
+</li>
+  <li>Template Engine, static / media files, DRY Approach // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/ab3e3daf808de699273d53f3fb8420f3db924afb">Code then</a>
+</li>
+  <li>Database using ORM, data management w/ SQL and Models // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/80ac30ee19557b5dcce326e5663809ce38baa948">Code then</a>
+</li>
+  <li>Complex views and connections with models &amp; templates, forms and workflow // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/f223f00bf9537e9fb347fc5012407140e417b716">Code then</a>
+</li>
+  <li>Custom user authentication views &amp; handling, User model, class-based views // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/7ec9076f5ec0b2d84d4625f8bbc5c7883a1ee0a7">Code then</a>
+</li>
+  <li>Cookies, fundamentals of JQuery, AJAX for CRUD, search functionality // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/037322bed4a9717ff0ed12f76a857b1f94d1db6a">Code then</a>
+</li>
+  <li>Bulma (themed entire site from skeleton –&gt; bulma) // <a href="https://github.com/PseudoCodeNerd/django-with-rango/tree/160ed76ed8130f9de6763c94e47f135349da4513">Code then</a>
+</li>
+  <li>deployment using PythonAnywhere and Progressive Web Apps.</li>
+</ul>
+
+<h2 id="putting-it-all-together">
+<a class="anchor" href="#putting-it-all-together" aria-hidden="true"><span class="octicon octicon-link"></span></a>Putting it all together.</h2>
+<p>Not gonna lie, the most satisfying part was the deployment and asking my friends to test it out. I’m thankful to those who tested out my app by creating accounts on this <strong>Social Media Web App Barebones</strong> (That’s what I call it to make it sound cool). I have a few other ideas for things I want to make with Django but they are still a <em>WIP</em>.</p>
+
+<h4 id="preview-the-website-here">
+<a class="anchor" href="#preview-the-website-here" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preview the website <a href="http://rango.madhavsharma.me/">here</a>
+</h4>
+
+<blockquote class="twitter-tweet">
+<p lang="en" dir="ltr">Looks great! Well done @sharmadhavs - we are super glad you grasped everything! Keep learning! ☺️ <a href="https://t.co/oDy7Wrxm5u">pic.twitter.com/oDy7Wrxm5u</a></p>— Tango With Django (@tangowithdjango) <a href="https://twitter.com/tangowithdjango/status/1237475883989991426?ref_src=twsrc%5Etfw">March 10, 2020</a>
+</blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<hr>
+
+<p><img src="/blog/images/w2.png" alt="" title="lazy eh ?">
+<img src="/blog/images/w1.png" alt="" title="hmmmm"></p>
+
+<h2 id="fin">
+<a class="anchor" href="#fin" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong><em>Fin.</em></strong>
+</h2>
+
+  </div><a class="u-url" href="/blog/django/weekend-project/2020/03/10/rango-django-project.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>All my activities and experiences in one place-mostly ML stuff.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/pseudocodenerd" title="pseudocodenerd"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/sharmadhav03" title="sharmadhav03"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

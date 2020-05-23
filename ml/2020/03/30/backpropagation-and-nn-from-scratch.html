@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Musings over Backpropagation | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Musings over Backpropagation" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="And a Neural Network from Scratch in Python." />
+<meta property="og:description" content="And a Neural Network from Scratch in Python." />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/backprop.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Musings over Backpropagation","dateModified":"2020-03-30T00:00:00-05:00","description":"And a Neural Network from Scratch in Python.","datePublished":"2020-03-30T00:00:00-05:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/backprop.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html"},"url":"https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Musings over Backpropagation | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Musings over Backpropagation" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="And a Neural Network from Scratch in Python." />
+<meta property="og:description" content="And a Neural Network from Scratch in Python." />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/backprop.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Musings over Backpropagation","dateModified":"2020-03-30T00:00:00-05:00","description":"And a Neural Network from Scratch in Python.","datePublished":"2020-03-30T00:00:00-05:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/backprop.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html"},"url":"https://pseudocodenerd.github.io/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Madhav&#39;s CS Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Musings over Backpropagation</h1><p class="page-description">And a Neural Network from Scratch in Python.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-03-30T00:00:00-05:00" itemprop="datePublished">
+        Mar 30, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      9 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#ml">ml</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/PseudoCodeNerd/blog/tree/master/_notebooks/2020-03-30-backpropagation-and-nn-from-scratch.ipynb" role="button">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div><div class="px-2">
+    <a href="https://colab.research.google.com/github/PseudoCodeNerd/blog/blob/master/_notebooks/2020-03-30-backpropagation-and-nn-from-scratch.ipynb">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-03-30-backpropagation-and-nn-from-scratch.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Notes-and-Implementation-of-Backpropagation-Algorithm">Notes and Implementation of Backpropagation Algorithm<a class="anchor-link" href="#Notes-and-Implementation-of-Backpropagation-Algorithm"> </a></h2><h3 id="A-third-attempt-(finally-a-successful-one)-to-understand-the-mechanics-behind-a-neural-network-FT.-Calculus">A third attempt (finally a successful one) to understand the mechanics behind a neural network FT. Calculus<a class="anchor-link" href="#A-third-attempt-(finally-a-successful-one)-to-understand-the-mechanics-behind-a-neural-network-FT.-Calculus"> </a></h3><hr />
+<h2 id="Explaination-and-Math">Explaination and Math<a class="anchor-link" href="#Explaination-and-Math"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<table>
+<thead><tr>
+<th style="text-align:center">1,3</th>
+<th style="text-align:center">2,4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="https://i.imgur.com/2y312KC.jpg" alt="" /></td>
+<td style="text-align:center"><img src="https://i.imgur.com/F6Afhfy.jpg" alt="" /></td>
+</tr>
+<tr>
+<td style="text-align:center"><img src="https://i.imgur.com/OamO0UN.jpg" alt="" /></td>
+<td style="text-align:center"><img src="https://i.imgur.com/zlAyNq4.jpg" alt="" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><div class="flash flash-warn">
+    <svg class="octicon octicon-zap" viewBox="0 0 10 16" version="1.1" width="10" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M10 7H6l3-7-9 9h4l-3 7 9-9z"></path></svg>
+    <strong>Important: </strong>If my notes aren&#8217;t visible, please go the the individual page link at imgur:
+</div></p>
+<ol>
+<li><p><a href="https://i.imgur.com/2y312KC.jpg">https://i.imgur.com/2y312KC.jpg</a></p>
+</li>
+<li><p><a href="https://i.imgur.com/F6Afhfy.jpg">https://i.imgur.com/F6Afhfy.jpg</a></p>
+</li>
+<li><p><a href="https://i.imgur.com/OamO0UN.jpg">https://i.imgur.com/OamO0UN.jpg</a></p>
+</li>
+<li><p><a href="https://i.imgur.com/zlAyNq4.jpg">https://i.imgur.com/zlAyNq4.jpg</a></p>
+</li>
+</ol>
+<hr />
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Notation-used">Notation used<a class="anchor-link" href="#Notation-used"> </a></h2><table>
+<thead><tr>
+<th style="text-align:center"><strong>Weights</strong></th>
+<th style="text-align:center"><strong>Biases (star)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="http://neuralnetworksanddeeplearning.com/images/tikz16.png" alt="" /></td>
+<td style="text-align:center"><img src="http://neuralnetworksanddeeplearning.com/images/tikz17.png" alt="" /></td>
+</tr>
+</tbody>
+</table>
+<h4 id="read-notes-to-better-understand"><em>read notes to better understand</em><a class="anchor-link" href="#read-notes-to-better-understand"> </a></h4><h3 id="Formulas-to-be-further-used-in-code-:">Formulas to be further used in code :<a class="anchor-link" href="#Formulas-to-be-further-used-in-code-:"> </a></h3><p><img src="http://neuralnetworksanddeeplearning.com/images/tikz21.png" alt="" /></p>
+<hr />
+<h3 id="Code">Code<a class="anchor-link" href="#Code"> </a></h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># helper functions (here, activation functions)</span>
+<span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;the sigmoid activation function&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">sigmoid_prime</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;the derivative of the sigmoid function&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;the ReLU activation function&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">one_hot_encoding</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;One hot encode to a 10-dimensional unit vector with prediction&quot;&quot;&quot;</span>
+    <span class="n">encoded_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeroes</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">encoded_vec</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">ohe</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># loss functions : here I&#39;ll try using both CrossEntropyLoss (losLoss) and </span>
+<span class="c1"># QuadraticLoss functions to compare their performance.</span>
+<span class="c1"># https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html : Formulas</span>
+<span class="c1"># employed decent OOP practices</span>
+
+<span class="k">class</span> <span class="nc">CrossEntropyCost</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return : cost associated with input a and desired output y</span>
+<span class="sd">        sometime, when a = y, the formula for CrossEntropy returns NaN</span>
+<span class="sd">        Formula : (1-y)*np.log(1-a) </span>
+<span class="sd">        hence, np.nan_to_num is used to convert NaN&#39;s to (0.0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_numn</span><span class="p">(</span><span class="o">-</span><span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">)))</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+    
+<span class="k">class</span> <span class="nc">MSE_cost</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return : cost associated with input a and desired output y&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;params a, y follow suite</span>
+<span class="sd">            z is the value of the neuron. from our derivation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigmoid_prime</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">NN</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">CrossEntropyCost</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        list::size : number of neurons in respective layers of the network</span>
+<span class="sd">        weights and biases are generated randomly through Gaussian Distribution with zero mean and variance of 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="c1"># initializing weights only for 2nd to last layer since 1st layer is input layer (lacks weights)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">biases</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="n">cost</span>
+        
+        
+    <span class="k">def</span> <span class="nf">forward_propagation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The neuron calculation formula : Wa+b&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">a</span>
+
+    
+    <span class="k">def</span> <span class="nf">back_propagation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return : (del_w, del_b) , the gradient for the cost function</span>
+<span class="sd">        del_w and del_b are layer-by-layer lists of numpy arrays.</span>
+<span class="sd">        Warning : negative indices would be heavily utilized</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">del_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">]</span>
+        <span class="n">del_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeroes</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">]</span>
+        <span class="c1"># forward prop</span>
+        <span class="n">curr_activation</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">activations</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="c1"># store all activations by layer, remember chain-rule </span>
+        <span class="n">z_lis</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># store all z values for layers, remember tree structure from notes</span>
+        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">):</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">curr_activation</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+            <span class="n">curr_activation</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">z_lis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">activations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_activation</span><span class="p">)</span>
+        <span class="c1"># backward pass : calculating cost by taking last elems of a, z lists</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span><span class="o">.</span><span class="n">delta</span><span class="p">(</span><span class="n">activations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">z_lis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">del_w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">activations</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span>
+        <span class="n">del_b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+        
+        <span class="c1"># going back all layers</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">z_lis</span><span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="p">]</span>
+            <span class="n">del_sigmoid</span> <span class="o">=</span> <span class="n">sigmoid_prime</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">delta</span><span class="p">)</span> <span class="o">*</span> <span class="n">del_sigmoid</span>
+            <span class="n">del_w</span><span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">activations</span><span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span>
+            <span class="n">del_b</span><span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">del_w</span><span class="p">,</span> <span class="n">del_b</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">initialize_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialize weights using Gaussian Distribution with mean 0 and SD  1</span>
+<span class="sd">        over sqrt of number of weights connecting same neuron</span>
+<span class="sd">        initialize biases using Gaussian Distribution with mean 0 and SD 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span>
+                        <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">biases</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+        
+        
+    <span class="k">def</span> <span class="nf">trainer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">m_bs</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="n">eval_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+               <span class="n">print_eval_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_eval_acc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_train_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+               <span class="n">print_train_acc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the neural network using mini-batch stochastic gradient</span>
+<span class="sd">        descent. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">eval_data</span><span class="p">:</span>
+            <span class="n">n_data</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">eval_data</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">training_data</span><span class="p">)</span>
+        <span class="n">eval_cost</span><span class="p">,</span> <span class="n">eval_acc</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">train_cost</span><span class="p">,</span> <span class="n">train_acc</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
+            <span class="n">mini_batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">training_data</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="n">m_bs</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span>
+                           <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m_bs</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">mini_batch</span> <span class="ow">in</span> <span class="n">mini_batches</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_mini_batch</span><span class="p">(</span><span class="n">mini_batch</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_data</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Training : Epoch </span><span class="si">% c</span><span class="s1">omplete.&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">print_train_cost</span><span class="p">:</span>
+                <span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">train_acc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy on training data : </span><span class="si">{}</span><span class="s1"> / </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">print_train_cost</span><span class="p">:</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_cost</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">)</span>
+                <span class="n">train_cost</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cost on training data : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cost</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">print_eval_acc</span><span class="p">:</span>
+                <span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">(</span><span class="n">eval_data</span><span class="p">)</span>
+                <span class="n">eval_acc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy on training data : </span><span class="si">{}</span><span class="s1"> / </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">print_eval_cost</span><span class="p">:</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_cost</span><span class="p">(</span><span class="n">eval_data</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">train_cost</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cost on training data : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cost</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">eval_cost</span><span class="p">,</span> <span class="n">eval_acc</span><span class="p">,</span> <span class="n">train_cost</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">update_mini_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mini_batch</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the network&#39;s weights and biases by applying gradient</span>
+<span class="sd">        descent using backpropagation to a single mini batch.mini_batch is a list of tuples ``(x, y)``, ``eta`` is the</span>
+<span class="sd">        learning rate, lmbda is the regularization parameter, and</span>
+<span class="sd">        n is the total size of the training data set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nabla_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">]</span>
+        <span class="n">nabla_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">mini_batch</span><span class="p">:</span>
+            <span class="n">delta_nabla_b</span><span class="p">,</span> <span class="n">delta_nabla_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backprop</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">nabla_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">nb</span><span class="o">+</span><span class="n">dnb</span> <span class="k">for</span> <span class="n">nb</span><span class="p">,</span> <span class="n">dnb</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nabla_b</span><span class="p">,</span> <span class="n">delta_nabla_b</span><span class="p">)]</span>
+            <span class="n">nabla_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">nw</span><span class="o">+</span><span class="n">dnw</span> <span class="k">for</span> <span class="n">nw</span><span class="p">,</span> <span class="n">dnw</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nabla_w</span><span class="p">,</span> <span class="n">delta_nabla_w</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="n">eta</span><span class="o">*</span><span class="p">(</span><span class="n">lmbda</span><span class="o">/</span><span class="n">n</span><span class="p">))</span><span class="o">*</span><span class="n">w</span><span class="o">-</span><span class="p">(</span><span class="n">eta</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">mini_batch</span><span class="p">))</span><span class="o">*</span><span class="n">nw</span>
+                        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">nw</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">nabla_w</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">biases</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">-</span><span class="p">(</span><span class="n">eta</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">mini_batch</span><span class="p">))</span><span class="o">*</span><span class="n">nb</span>
+                       <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">,</span> <span class="n">nabla_b</span><span class="p">)]</span>
+    
+    
+    <span class="k">def</span> <span class="nf">accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the number of inputs in ``data`` for which the neural</span>
+<span class="sd">        network outputs the correct result. The neural network&#39;s</span>
+<span class="sd">        output is assumed to be the index of whichever neuron in the</span>
+<span class="sd">        final layer has the highest activation.</span>
+<span class="sd">        The flag ``convert`` should be set to False if the data set is</span>
+<span class="sd">        validation or test data (the usual case), and to True if the</span>
+<span class="sd">        data set is the training data. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">convert</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+                       <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">y</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span>
+
+    
+    <span class="k">def</span> <span class="nf">total_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the total cost for the data set ``data``. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">convert</span><span class="p">:</span> <span class="n">y</span> <span class="o">=</span> <span class="n">vectorized_result</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">cost</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">lmbda</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cost</span>
+
+    
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the neural network to the file ``filename``.&quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+                <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">],</span>
+                <span class="s2">&quot;biases&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">],</span>
+                <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)}</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Loading-Data">Loading Data<a class="anchor-link" href="#Loading-Data"> </a></h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># this python code to load MNIST Data is by Michael Nielsen.</span>
+<span class="kn">import</span> <span class="nn">_pickle</span> <span class="k">as</span> <span class="nn">cPickle</span>
+<span class="kn">import</span> <span class="nn">gzip</span>
+
+<span class="c1"># Third-party libraries</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">load_data</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the MNIST data as a tuple containing the training data,</span>
+<span class="sd">    the validation data, and the test data.</span>
+<span class="sd">    The ``training_data`` is returned as a tuple with two entries.</span>
+<span class="sd">    The first entry contains the actual training images.  This is a</span>
+<span class="sd">    numpy ndarray with 50,000 entries.  Each entry is, in turn, a</span>
+<span class="sd">    numpy ndarray with 784 values, representing the 28 * 28 = 784</span>
+<span class="sd">    pixels in a single MNIST image.</span>
+<span class="sd">    The second entry in the ``training_data`` tuple is a numpy ndarray</span>
+<span class="sd">    containing 50,000 entries.  Those entries are just the digit</span>
+<span class="sd">    values (0...9) for the corresponding images contained in the first</span>
+<span class="sd">    entry of the tuple.</span>
+<span class="sd">    The ``validation_data`` and ``test_data`` are similar, except</span>
+<span class="sd">    each contains only 10,000 images.</span>
+<span class="sd">    This is a nice data format, but for use in neural networks it&#39;s</span>
+<span class="sd">    helpful to modify the format of the ``training_data`` a little.</span>
+<span class="sd">    That&#39;s done in the wrapper function ``load_data_wrapper()``, see</span>
+<span class="sd">    below.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;mnist.pkl.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">test_data</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin1&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">load_data_wrapper</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a tuple containing ``(training_data, validation_data,</span>
+<span class="sd">    test_data)``. Based on ``load_data``, but the format is more</span>
+<span class="sd">    convenient for use in our implementation of neural networks.</span>
+<span class="sd">    In particular, ``training_data`` is a list containing 50,000</span>
+<span class="sd">    2-tuples ``(x, y)``.  ``x`` is a 784-dimensional numpy.ndarray</span>
+<span class="sd">    containing the input image.  ``y`` is a 10-dimensional</span>
+<span class="sd">    numpy.ndarray representing the unit vector corresponding to the</span>
+<span class="sd">    correct digit for ``x``.</span>
+<span class="sd">    ``validation_data`` and ``test_data`` are lists containing 10,000</span>
+<span class="sd">    2-tuples ``(x, y)``.  In each case, ``x`` is a 784-dimensional</span>
+<span class="sd">    numpy.ndarry containing the input image, and ``y`` is the</span>
+<span class="sd">    corresponding classification, i.e., the digit values (integers)</span>
+<span class="sd">    corresponding to ``x``.</span>
+<span class="sd">    Obviously, this means we&#39;re using slightly different formats for</span>
+<span class="sd">    the training data and the validation / test data.  These formats</span>
+<span class="sd">    turn out to be the most convenient for use in our neural network</span>
+<span class="sd">    code.&quot;&quot;&quot;</span>
+    <span class="n">tr_d</span><span class="p">,</span> <span class="n">va_d</span><span class="p">,</span> <span class="n">te_d</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">()</span>
+    <span class="n">training_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tr_d</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">training_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectorized_result</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">tr_d</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">training_data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">training_inputs</span><span class="p">,</span> <span class="n">training_results</span><span class="p">)</span>
+    <span class="n">validation_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">va_d</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">validation_data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">validation_inputs</span><span class="p">,</span> <span class="n">va_d</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">test_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">te_d</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">test_data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">test_inputs</span><span class="p">,</span> <span class="n">te_d</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">vectorized_result</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a 10-dimensional unit vector with a 1.0 in the jth</span>
+<span class="sd">    position and zeroes elsewhere.  This is used to convert a digit</span>
+<span class="sd">    (0...9) into a corresponding desired output from the neural</span>
+<span class="sd">    network.&quot;&quot;&quot;</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">e</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">test_data</span> <span class="o">=</span> <span class="n">load_data_wrapper</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">NN</span><span class="p">([</span><span class="mi">784</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span><span class="o">.</span><span class="n">trainer</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">eval_data</span><span class="o">=</span><span class="n">test_data</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-44-742e24694131&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>learner<span class="ansi-blue-fg">.</span>trainer<span class="ansi-blue-fg">(</span>training_data<span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">30</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">10</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">3.0</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0.1</span><span class="ansi-blue-fg">,</span> eval_data<span class="ansi-blue-fg">=</span>test_data<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-40-6f3c6ca52295&gt;</span> in <span class="ansi-cyan-fg">trainer</span><span class="ansi-blue-fg">(self, training_data, epochs, m_bs, eta, lmbda, eval_data, print_eval_cost, print_eval_acc, print_train_cost, print_train_acc)</span>
+<span class="ansi-green-intense-fg ansi-bold">     79</span>         train_cost<span class="ansi-blue-fg">,</span> train_acc <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">     80</span>         <span class="ansi-green-fg">for</span> c <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>epochs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 81</span><span class="ansi-red-fg">             </span>random<span class="ansi-blue-fg">.</span>shuffle<span class="ansi-blue-fg">(</span>training_data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     82</span>             mini_batches = [training_data[k:k+m_bs] for k in
+<span class="ansi-green-intense-fg ansi-bold">     83</span>                            range(0, n, m_bs)]
+
+<span class="ansi-green-fg">~/anaconda3/envs/fastai/lib/python3.7/random.py</span> in <span class="ansi-cyan-fg">shuffle</span><span class="ansi-blue-fg">(self, x, random)</span>
+<span class="ansi-green-intense-fg ansi-bold">    273</span>         <span class="ansi-green-fg">if</span> random <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    274</span>             randbelow <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_randbelow
+<span class="ansi-green-fg">--&gt; 275</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> reversed<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span> len<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    276</span>                 <span class="ansi-red-fg"># pick an element in x[:i+1] with which to exchange x[i]</span>
+<span class="ansi-green-intense-fg ansi-bold">    277</span>                 j <span class="ansi-blue-fg">=</span> randbelow<span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">TypeError</span>: object of type &#39;zip&#39; has no len()</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr />
+<h2 id="Other-Resources-to-dive-more-into-Backpropagation-Calculus">Other Resources to dive more into Backpropagation Calculus<a class="anchor-link" href="#Other-Resources-to-dive-more-into-Backpropagation-Calculus"> </a></h2><ul>
+<li><p><a href="https://explained.ai/matrix-calculus/index.html">Here's a good paper</a> about matrix calculus for ML/DL.</p>
+</li>
+<li><p>Here's a <a href="http://www.cs.cornell.edu/courses/cs5740/2016sp/resources/backprop.pdf">presentation from cornell</a> that covers the derivation of the back propagation formulas.</p>
+</li>
+<li><p>Here is a more <a href="http://cs231n.github.io/optimization-2/">intuitive explanation of back propagation</a> with examples and some math from Stanford CS231n.</p>
+</li>
+<li><p>Here's a deeper look at the <a href="http://cs231n.stanford.edu/vecDerivs.pdf">underlying math</a> also from Stanford CS231n.</p>
+</li>
+<li><p>And if you ever did any graduate work in math or physics or related fields, you might find <a href="https://ccrma.stanford.edu/~dattorro/matrixcalc.pdf">this treatment</a> worth a look, but "there be dragons!" ;^) ...</p>
+</li>
+</ul>
+<hr />
+<p>With this, I end this post. It was really intense, trying to comprehend the math behind Backpropagation in a single layer and then expanding the knowledge over to deep learning neural networks. 3B1B's video on Backpropagation was really intuitive to help me visualise the working in order to write this code.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><a class="u-url" href="/blog/ml/2020/03/30/backpropagation-and-nn-from-scratch.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>All my activities and experiences in one place-mostly ML stuff.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/pseudocodenerd" title="pseudocodenerd"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/sharmadhav03" title="sharmadhav03"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
