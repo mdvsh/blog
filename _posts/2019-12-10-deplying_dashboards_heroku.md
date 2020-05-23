@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Deploying Web Apps in Julia"
-summary: "Using Heroku for Google Code-In 2019"
+description: "Using Heroku for Google Code-In 2019"
 toc: false
 comments: false
 image: images/deploy.png
