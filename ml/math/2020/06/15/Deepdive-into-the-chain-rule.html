@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>The Chain Rule: Revisited | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="The Chain Rule: Revisited" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning." />
+<meta property="og:description" content="Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning." />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/calc.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-15T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"The Chain Rule: Revisited","dateModified":"2020-06-15T00:00:00-05:00","description":"Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning.","datePublished":"2020-06-15T00:00:00-05:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/calc.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html"},"url":"https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>The Chain Rule: Revisited | Madhav’s CS Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="The Chain Rule: Revisited" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning." />
+<meta property="og:description" content="Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning." />
+<link rel="canonical" href="https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html" />
+<meta property="og:url" content="https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html" />
+<meta property="og:site_name" content="Madhav’s CS Blog" />
+<meta property="og:image" content="https://pseudocodenerd.github.io/blog/images/calc.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-15T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"The Chain Rule: Revisited","dateModified":"2020-06-15T00:00:00-05:00","description":"Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning.","datePublished":"2020-06-15T00:00:00-05:00","@type":"BlogPosting","image":"https://pseudocodenerd.github.io/blog/images/calc.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html"},"url":"https://pseudocodenerd.github.io/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://pseudocodenerd.github.io/blog/feed.xml" title="Madhav's CS Blog" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Madhav&#39;s CS Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">The Chain Rule: Revisited</h1><p class="page-description">Thoughts on the most important concept of Differential Calculus and the backbone of Machine Learning.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-06-15T00:00:00-05:00" itemprop="datePublished">
+        Jun 15, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      11 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#ml">ml</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#math">math</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/PseudoCodeNerd/blog/tree/master/_notebooks/2020-06-15-Deepdive-into-the-chain-rule.ipynb" role="button">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div><div class="px-2">
+    <a href="https://colab.research.google.com/github/PseudoCodeNerd/blog/blob/master/_notebooks/2020-06-15-Deepdive-into-the-chain-rule.ipynb">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Fundamentals:-functions,-differentiability-and-compostion-of-functions.">Fundamentals: functions, differentiability and compostion of functions. </a></li>
+<li class="toc-entry toc-h2"><a href="#Chain-Rule-for-Single-Variable-Functions">Chain Rule for Single Variable Functions </a></li>
+<li class="toc-entry toc-h2"><a href="#The-Chain-Rule-in-Programming">The Chain Rule in Programming </a></li>
+<li class="toc-entry toc-h2"><a href="#The-Multivariate-Chain-Rule">The Multivariate Chain Rule </a></li>
+<li class="toc-entry toc-h2"><a href="#Applying-Multivariate-Chain-Rule">Applying Multivariate Chain Rule </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Example">Example </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#Single-Variate-Approach:">Single Variate Approach: </a></li>
+<li class="toc-entry toc-h4"><a href="#Multi-variate-Approach:">Multi-variate Approach: </a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#The-'Link'">The &#39;Link&#39; </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#$Q.-E.-D$">$Q. E. D$ </a></li>
+<li class="toc-entry toc-h4"><a href="#So,-why-this-Madhav-?">So, why this Madhav ? </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-06-15-Deepdive-into-the-chain-rule.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this blog post, I'll be revisiting Chain Rule as an essential concept behind Machine Learning and will explain how it works for both single and multivariable functions. Let's get started...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Fundamentals:-functions,-differentiability-and-compostion-of-functions.">
+<a class="anchor" href="#Fundamentals:-functions,-differentiability-and-compostion-of-functions." aria-hidden="true"><span class="octicon octicon-link"></span></a>Fundamentals: functions, differentiability and compostion of functions.<a class="anchor-link" href="#Fundamentals:-functions,-differentiability-and-compostion-of-functions."> </a>
+</h2>
+<p><strong>Function :</strong> Think of a function $f$ as a mapping between the domain of a set, say $X$, to the codomain $Y$ of another set. Such a function is represented as $f : X \rightarrow Y$.</p>
+<p>If with this $f$, it's given that $g : Y \rightarrow Z$, then $g \circ f : X \rightarrow Y$ isn't just <em>gof</em>, rather it's known as the <strong>composition</strong> of $g$ and $f$. This composition is defined $\forall x \in X$ as :</p>
+$$ (g \circ f)(x)=g(f(x)) $$<p>In the case of Single variable calculus, $f$ and $g$ are real valued functions with their Domains and Co-domains both belonging to $\mathbb{R}$.</p>
+<p><strong>Example :</strong></p>
+<ol>
+<li>Let, $g(x) = x^{3}$ and $f(x) = x - 3$, then the composition <em>gof</em> is : $$(g \circ f)(x)=g(f(x))=g(x-3)=(x-3)^{3}$$</li>
+</ol>
+<p><em>Note: Compositions work the other way around too, like you can also find $f \circ g$ but we shouldn't assume compositions to be commutative. Compositions are in fact associative</em>.</p>
+<p><strong>Differntiability :</strong> I'll not go into much detail about this here. If you feel like refreshing this concept, head out to Khan Academy <a href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-1-new/ab-2-4/v/differentiability">here</a> to brush up your basics.</p>
+<p>A function $f$ is differentiable at a point, say $a$ if the following limit exists</p>
+$$\lim _{h \rightarrow 0} \frac{f\left(a+h\right)-f\left(a\right)}{h}$$<p>This particular limit is also an expression for the <em>derivative</em> of function $f$ at point $a$. Mostly, instead of writing this lenghty limit, we express this derivative as $f^{'}(a)$ or $\frac{d}{d x} f\left(a\right)$. This particular point can be any point on the real line and the value of the derivative is also a real number.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Chain-Rule-for-Single-Variable-Functions">
+<a class="anchor" href="#Chain-Rule-for-Single-Variable-Functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chain Rule for Single Variable Functions<a class="anchor-link" href="#Chain-Rule-for-Single-Variable-Functions"> </a>
+</h2>
+<p>It states that if $g$ is differentiable at $a$ and $f$ is differentiable at $g(a)$, then the composition $f \circ g$ is differentiable at $a$ and the value of its derivative is $$(f \circ g)^{\prime}\left(a\right)=f^{\prime}\left(g\left(a\right)\right) g^{\prime}\left(a\right)$$</p>
+<p>It's proof is best left to the people at <a href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-2-new/ab-diff-2-optional/v/chain-rule-proof">Khan Academy</a>. However, there is one small error I noticed in a majority of the proofs online. All of them contain division by a quantity which <em>might</em> be zero. This is often overlooked and doesn't <em>really</em> make a difference, but for the sake of mathematical rigor if you wish to see the complicated version of the proof, please refer to <em>Thomas</em> Calculus'.
+
+</p>
+<center>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/FKraGDm2fUY" frameborder="0" allowfullscreen=""></iframe>
+</center>
+
+<p><strong>Examples :</strong></p>
+<ol>
+<li>
+<p>Take $f(x) = (x-2)^{2}$. Now try to think (and split) this function as a composition of two or more functions. Here, we can take $g(x) = x-2$ and $h(x) = x^{2}$. This way, $f(x)$ can be represented as $h\circ g$ and the derivative of this composition is $h^{\prime}(g(x)) g^{\prime}(x), \text { or } 2(x-2) \text { since } g^{\prime}(x)=1$. The derivative of $w$ exists at all points.</p>
+</li>
+<li>
+<p>Take $f(x)=\cos \left[(x-2)^{3}\right]$. After analysing, we observe that $f$ is a composition of 3 other functions:
+$$\begin{aligned}
+g(x) &amp;=x-2 \\
+h(x) &amp;=x^{3} \\
+i(x) &amp;=\cos (x)
+\end{aligned}$$
+As discussed, compositon of functions is associative. $f$ can be expressed in one of two associative ways: $i\circ (h\circ g)$ or $(i\circ h)\circ g$. Going with the first one, we have $h\circ g$ from the previous example, so :</p>
+</li>
+</ol>
+$$
+\begin{aligned}
+\frac{d f(x)}{d x}=\frac{d i(h(g(x)))}{d x} &amp;=i^{\prime}(h(g(x))) h(g(x))^{\prime}(x) \\
+&amp;=-\sin (w(g(x))) 3(x-2) \\
+&amp;=-3 \sin \left[(x-2)^{3}\right](x-2)^{2}
+\end{aligned}
+$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-Chain-Rule-in-Programming">
+<a class="anchor" href="#The-Chain-Rule-in-Programming" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Chain Rule in Programming<a class="anchor-link" href="#The-Chain-Rule-in-Programming"> </a>
+</h2>
+<p>As we saw earlier, the chain rule can be used several times in a single calculation and it's this perk which makes chain rule such a powerful methjod for computing derivative of even every complex functions through a computational method. A function can simply be broken into simpler compositions and the chain rule be applied ever until we reach the base case of 1.</p>
+<p>To understand, let's take the <a href="https://en.wikipedia.org/wiki/Softmax_function">softmax function</a> as an example. Softmax is a crucial function in Machine Learning and finding it's derivative is a step in backpropagation in Neural Networks where it is mostly used as the activation function of the final layer to get the output of the model as a probability distribution. If you have appropriate background, I suggest looking at <a href="https://youtu.be/LLux1SW--oM">Softmax Regression (C2W3L08)</a> by <em>Andrew Ng</em>.</p>
+$$z(x)=\frac{1}{1+e^{-x}}$$<p>Here, we'll start drawing an equivalence between the mathematical part and the computational part to get a better intution.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="sd">"""the sigmoid activation function"""</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+<p>This might seem extremely similar to the mathematical function defined but this is all due to <em>pseudocode-like</em> syntax of Python. When interpreted, this computation is done step-by-step. Assuming we can only do one computation operation at every step, the code becomes :</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">c</span>
+    <span class="k">return</span> <span class="n">v</span>
+</pre></div>
+<p>This can be equivalently written in this notation $S^{\prime}=d^{\prime}(c) c^{\prime}(b) b^{\prime}(a) a^{\prime}(x)$. Calculating this derivative is same as calculating derivative of the composition $d \circ(c \circ(b \circ a))$ and is really simple since the constituent functions' derivative is trivial.</p>
+$$
+\begin{aligned}
+S^{\prime} &amp;=d^{\prime}(c) c^{\prime}(b) b^{\prime}(a)(-1) \\
+&amp;=d^{\prime}(c) c^{\prime}(b) e^{-x}(-1) \\
+&amp;=d^{\prime}(c)(1) e^{-x}(-1) \\
+&amp;=\frac{-1}{\left(1+e^{-x}\right)^{2}} e^{-x}(-1) \\
+&amp;=\frac{e^{-x}}{\left(1+e^{-x}\right)^{2}}
+\end{aligned}
+$$<p>Now, the exciting part and the intution strikes! If every function (even a complex one) can be broken down into trivial functions, <strong>then</strong>, using the chain rule we can find the derivative of any function computable by a program!!! Isn't this awesome.</p>
+<p>And this, my friends, is the basic of a technique known as <em><a href="https://en.wikipedia.org/wiki/Automatic_differentiation">Automatic Differentiation</a></em> on which all of scientific computing and deep learning is based. 
+As most of you would've heard about Backpropagation: The <em>miraculous</em> algorithm which makes the computer learn, understand and predict stuff; is the most notable use case of Automatic Differentiation and form the foundation of modern machine learning.</p>
+<p><em>Fun Fact: The modern Deep Learning Derby b/w PyTorch and Tensorflow essentially comes down to the different ways in which both these pacakges do their automatic differentiation on a computational graph.</em>
+</p>
+<div class="flash flash-success">
+    <svg class="octicon octicon-checklist" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M16 8.5l-6 6-3-3L8.5 10l1.5 1.5L14.5 7 16 8.5zM5.7 12.2l.8.8H2c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h7c.55 0 1 .45 1 1v6.5l-.8-.8c-.39-.39-1.03-.39-1.42 0L5.7 10.8a.996.996 0 000 1.41v-.01zM4 4h5V3H4v1zm0 2h5V5H4v1zm0 2h3V7H4v1zM3 9H2v1h1V9zm0-2H2v1h1V7zm0-2H2v1h1V5zm0-2H2v1h1V3z"></path></svg>
+    <strong>Tip: </strong>To learn more, read <a href="https://www.cs.toronto.edu/~rgrosse/courses/csc321_2018/slides/lec10.pdf">this</a> from <em>CSC321@UToronto</em>.
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-Multivariate-Chain-Rule">
+<a class="anchor" href="#The-Multivariate-Chain-Rule" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Multivariate Chain Rule<a class="anchor-link" href="#The-Multivariate-Chain-Rule"> </a>
+</h2>
+<p>So far we've dealt with functions that map from $n$ to $m$ dimensions: $f: \mathbb{R}^{n} \rightarrow \mathbb{R}^{m}$.
+Since every output of $f$ can be considered a separate function dependent on $n$ variables, we can also think about using matrices and vectors.</p>
+<p><strong>Multivariate Notation</strong></p>
+<ul>
+<li>Consider outputs of a function $f$ to be numbered from 1 to m as $f_{1}, f_{2} \ldots f_{m}$. For all these outputs, we can calculate the partial derivative by any of n inputs as :
+$$D_{j} f_{i}(a)=\frac{\partial f_{i}}{\partial a_{j}}(a)$$
+where $j$ goes from 1 to $n$, $a$ is a vector with $n$ elems. When $f$ is differentiable at $a$, then the derivative is expressed as the <em>Jacobian Matrix</em>: a matrix of all first-order partial derivatives of the function.</li>
+</ul>
+$$
+D f(a)=\left[\begin{array}{ccc}
+\frac{\partial f_{1}}{\partial a_{1}}(a) &amp; \cdots &amp; \frac{\partial f_{1}}{\partial a_{n}}(a) \\
+\vdots &amp; &amp; \vdots \\
+\frac{\partial f_{m}}{\partial a_{1}}(a) &amp; \cdots &amp;\frac{\partial f_{m}}{\partial a_{n}}(a)
+\end{array}\right]
+$$<p><strong>The Rule</strong></p>
+<p>The Multivariate Chain Rule states that: given a function $f: \mathbb{R}^{m} \rightarrow \mathbb{R}^{p}$ and $g: \mathbb{R}^{n} \rightarrow \mathbb{R}^{m}$ along with an arbitrary point $a$ in belonging to Real Numbers, if $g$ is differentiable at $a$ and $f$ is differentiable at $g(a)$;</p>
+<p>Then $f \circ g$ is differentiable at $a$ and the derivative is $$D(f \circ g)(a)=D f(g(a)) \cdot D g(a)$$</p>
+<p>This is also the product of matrix multiplication of $D f(g(a))$ and $D g(a)$ <em>(try verifying the dimensions to cross-check the validity of the multiplication)</em>.</p>
+<p>Intuitively, the multivariate chain rule is identical to the single variable one (the latter being nothing more than a special case of the former) with <strong><em>derivatives replaced by derivative matrices</em></strong>. We know From Linear Algebr how to represent Linear Transformations by Matrices, and how the <strong>composition of two linear transformations is the product of their matrices.</strong></p>
+<p>Thus, since derivative matrices - like derivatives in one dimension - are a linear approximation to the function, the chain rule makes complete sense. This is an amazing connection between Linear Algebra and Calculus. Again, the proof is best left to the experts at MIT (<em>below</em>) &amp; <a href="https://www.math.lsu.edu/~rich/2057downloads/ChainRuleWithDifferentiabilityProof.pdf">this</a> document from LSU.
+
+</p>
+<center>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/7eZVshlT33Q" frameborder="0" allowfullscreen=""></iframe>
+</center>
+
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Applying-Multivariate-Chain-Rule">
+<a class="anchor" href="#Applying-Multivariate-Chain-Rule" aria-hidden="true"><span class="octicon octicon-link"></span></a>Applying Multivariate Chain Rule<a class="anchor-link" href="#Applying-Multivariate-Chain-Rule"> </a>
+</h2>
+<h3 id="Example">
+<a class="anchor" href="#Example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example<a class="anchor-link" href="#Example"> </a>
+</h3>
+<p>Let's take function $f$ as a scalar function $\mathbb{R}^{3} \rightarrow \mathbb{R}$ representing $f(x, y, z)$ giving the weather at some point in a 3D grid. Obviously, such a function would be a very complex function to write (or even think about) but just assume it as a simple function for the sake of this thought experiement.</p>
+<p>Now, imagine moving through this 3D space on a curve defined by say, $g: \mathbb{R} \rightarrow \mathbb{R}^{3}$, which takes time and gives <em>your</em> spatial coordinates $x(t), y(t), z(t)$ at a particular point in the 3D space.</p>
+<p>Now we want to know what the weather is like at that particular point and how it changes as a funtion of $t$. Since, here weather isn't a direct dependence on $t$, but a function of location and in turn location <em>is</em> a function of time. And just like that, we get a <strong>composition</strong> $f\circ g$ as the solution to our thought experiment.</p>
+<h4 id="Single-Variate-Approach:">
+<a class="anchor" href="#Single-Variate-Approach:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Variate Approach:<a class="anchor-link" href="#Single-Variate-Approach:"> </a>
+</h4>$$g(t)=\left(\begin{array}{c}
+t \\
+t^{2} \\
+t^{3}
+\end{array}\right)$$<p>and say $f$ is : 
+$$f\left(\begin{array}{l}
+x \\
+y \\
+z
+\end{array}\right)=x^{2}+5y+10z+x y z$$</p>
+<p>Now, if we rewrite x, y, z as function of $t$, we get :
+$$f(x(t), y(t), z(t))=x(t)^{2}+x(t) y(t) z(t)+5 y(t) + 10 z(t)$$</p>
+<p>Composing $f$ with $g$ gives us, $$(f \circ g)(t)=f(g(t))=f\left(t, t^{2}, t^{3}\right)=t^{2}+t^{6}+5 t^{2}+10 t^{3}=6 t^{2}+t^{6}+10 t^{3}$$ and the derivative is easily found out to be $(f \circ g)^{\prime}(t)=12 t+6 t^{5}+30 t^{2}$</p>
+<hr>
+<h4 id="Multi-variate-Approach:">
+<a class="anchor" href="#Multi-variate-Approach:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Multi-variate Approach:<a class="anchor-link" href="#Multi-variate-Approach:"> </a>
+</h4>
+<p>Let's try the same thing now but using Multivariate Chain Rule. Thus to compute $D(f \circ g)(t)$ we need $D f(g(t))$ and $D g(t)$. Starting with $D f(g(t))$, let's find $D f(x, y, z)$. Since it's a mapping from $\mathbb{R}^{3} \rightarrow \mathbb{R}$, the Jacobian Matrix is $1x3$ or simply, a row vector as :</p>
+$$D f(x, y, z)=\left[\begin{array}{lll}
+2 x+y z &amp; x z+5 &amp; x y + 10
+\end{array}\right]$$<p>But for applying the chain rule we need $D f(g(t))$ (see $g(t)$ from the single variate example)
+$$
+D f(g(t))=\left[\begin{array}{lll}
+2 t+t^{5} &amp; t^{4}+5 &amp; t^{3} + 10
+\end{array}\right]
+$$</p>
+<p>Now we need to find $D g(t) \cdot g(t)$ maps $\mathbb{R} \rightarrow \mathbb{R}^{3},$ so its Jacobian is a 3x1 matrix, or column vector:
+$$
+D g(t)=\left[\begin{array}{c}
+1 \\
+2 t \\
+3 t^{2}
+\end{array}\right]
+$$</p>
+<p>Finally, multiplying $D f(g(t))$ by $D g(t),$ we get:
+$$
+\begin{aligned}
+D(f \circ g)(t)=D f(g(t)) \cdot D g(t) &amp;=\left[2 t+t^{5} \quad t^{4}+5 \quad t^{3}+10\right] \cdot\left[\begin{array}{c}
+1 \\
+2 t \\
+3 t^{2}
+\end{array}\right] \\
+&amp;=2 t+t^{5}+2 t^{6}+10 t+3 t^{5} +30 t^{2}\\
+&amp;=12 t+6 t^{5}+30 t^{2}
+\end{aligned}
+$$</p>
+<p>Now that we've explored both the ways of finding the derivative,we can also interpret this result for the case where $f: \mathbb{R}^{3} \rightarrow \mathbb{R}$ and $g: \mathbb{R} \rightarrow \mathbb{R}^{3}$ is to recall that the directional derivative of $f$ in the direction of some vector $\vec{v}$ is:
+$$
+D_{\vec{v}} f=(\nabla f) \cdot \vec{v}
+$$</p>
+<p>If you don't understand what I'm talking about, give this video a watch...
+
+</p>
+<center>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/N_ZRcLheNv0" frameborder="0" allowfullscreen=""></iframe>
+</center>
+
+<p>Coming back to our case, $(\nabla f)$ is the Jacobian of $f$ (because of its dimensionality). So if we take $\vec{v}$ to be the vector $D g(t),$ and evaluate the gradient at $g(t)$ we get:
+$$
+D_{D \vec{g}(t)} f(t)=(\nabla f(g(t))) \cdot D g(t)
+$$
+This gives us some additional intuition for the weather experiment. The change in weather as a function of time is the directional derivative of $f$ in the direction of the change in location $(D g(t))$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-'Link'">
+<a class="anchor" href="#The-'Link'" aria-hidden="true"><span class="octicon octicon-link"></span></a>The 'Link'<a class="anchor-link" href="#The-'Link'"> </a>
+</h2>
+<p>So how does it all come together ?</p>
+<p>Given function $f(x): \mathbb{R} \rightarrow \mathbb{R},$ the Jacobian matrix contains a single entry.
+$$
+D f(a)=\left[D_{x} f(a)\right]=\left[\frac{d f}{d x}(a)\right]
+$$
+Therefore, given two functions mapping $\mathbb{R} \rightarrow \mathbb{R}$, the derivative of their composition using the multivariate chain rule is:
+$$
+D(f \circ g)(a)=D f(g(a)) \cdot D g(a)=f^{\prime}(g(a)) g^{\prime}(a)
+$$
+Which is <strong>just the single-variable chain rule</strong>.</p>
+<p>This results from matrix multiplication between two $1 \times 1$ matrices, which ends up being just the product of their single entries and <em>Voila! We're Done.</em></p>
+<h4 id="$Q.-E.-D$">
+<a class="anchor" href="#%24Q.-E.-D%24" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>$Q. E. D$</em><a class="anchor-link" href="#%24Q.-E.-D%24"> </a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="So,-why-this-Madhav-?">
+<a class="anchor" href="#So,-why-this-Madhav-?" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>So, why this Madhav ?</em><a class="anchor-link" href="#So,-why-this-Madhav-?"> </a>
+</h4>
+<p>I don't know truly what prompted me to write this. Inspiration appeared from various sources with my occasional flipping through calc notes and a strong urge to write something <em>math-y</em> with LaTeX being among the major ones.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><a class="u-url" href="/blog/ml/math/2020/06/15/Deepdive-into-the-chain-rule.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>All my activities and experiences in one place-mostly ML stuff.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/pseudocodenerd" title="pseudocodenerd"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/sharmadhav03" title="sharmadhav03"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
