@@ -41,7 +41,10 @@ layout: notebook
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Fundamentals:-functions,-differentiability-and-compostion-of-functions.">Fundamentals: functions, differentiability and compostion of functions.<a class="anchor-link" href="#Fundamentals:-functions,-differentiability-and-compostion-of-functions."> </a></h2><p><strong>Function :</strong> Think of a function $f$ as a mapping between the domain of a set, say $X$, to the codomain $Y$ of another set. Such a function is represented as $f : X \rightarrow Y$.</p>
 <p>If with this $f$, it's given that $g : Y \rightarrow Z$, then $g \circ f : X \rightarrow Y$ isn't just <em>gof</em>, rather it's known as the <strong>composition</strong> of $g$ and $f$. This composition is defined $\forall x \in X$ as :</p>
-$$ (g \circ f)(x)=g(f(x)) $$<p>In the case of Single variable calculus, $f$ and $g$ are real valued functions with their Domains and Co-domains both belonging to $\mathbb{R}$.</p>
+<p>{% raw %}
+$$ (g \circ f)(x)=g(f(x)) $$
+{% endraw %}</p>
+<p>In the case of Single variable calculus, $f$ and $g$ are real valued functions with their Domains and Co-domains both belonging to $\mathbb{R}$.</p>
 <p><strong>Example :</strong></p>
 <ol>
 <li>Let, $g(x) = x^{3}$ and $f(x) = x - 3$, then the composition <em>gof</em> is : $$(g \circ f)(x)=g(f(x))=g(x-3)=(x-3)^{3}$$</li>
@@ -49,7 +52,10 @@ $$ (g \circ f)(x)=g(f(x)) $$<p>In the case of Single variable calculus, $f$ and 
 <p><em>Note: Compositions work the other way around too, like you can also find $f \circ g$ but we shouldn't assume compositions to be commutative. Compositions are in fact associative</em>.</p>
 <p><strong>Differntiability :</strong> I'll not go into much detail about this here. If you feel like refreshing this concept, head out to Khan Academy <a href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-1-new/ab-2-4/v/differentiability">here</a> to brush up your basics.</p>
 <p>A function $f$ is differentiable at a point, say $a$ if the following limit exists</p>
-$$\lim _{h \rightarrow 0} \frac{f\left(a+h\right)-f\left(a\right)}{h}$$<p>This particular limit is also an expression for the <em>derivative</em> of function $f$ at point $a$. Mostly, instead of writing this lenghty limit, we express this derivative as $f^{'}(a)$ or $\frac{d}{d x} f\left(a\right)$. This particular point can be any point on the real line and the value of the derivative is also a real number.</p>
+<p>{% raw %}
+$$\lim _{h \rightarrow 0} \frac{f\left(a+h\right)-f\left(a\right)}{h}$$
+{% endraw %}</p>
+<p>This particular limit is also an expression for the <em>derivative</em> of function $f$ at point $a$. Mostly, instead of writing this lenghty limit, we express this derivative as $f^{'}(a)$ or $\frac{d}{d x} f\left(a\right)$. This particular point can be any point on the real line and the value of the derivative is also a real number.</p>
 
 </div>
 </div>
@@ -86,7 +92,10 @@ $$
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="The-Chain-Rule-in-Programming">The Chain Rule in Programming<a class="anchor-link" href="#The-Chain-Rule-in-Programming"> </a></h2><p>As we saw earlier, the chain rule can be used several times in a single calculation and it's this perk which makes chain rule such a powerful methjod for computing derivative of even every complex functions through a computational method. A function can simply be broken into simpler compositions and the chain rule be applied ever until we reach the base case of 1.</p>
 <p>To understand, let's take the <a href="https://en.wikipedia.org/wiki/Softmax_function">softmax function</a> as an example. Softmax is a crucial function in Machine Learning and finding it's derivative is a step in backpropagation in Neural Networks where it is mostly used as the activation function of the final layer to get the output of the model as a probability distribution. If you have appropriate background, I suggest looking at <a href="https://youtu.be/LLux1SW--oM">Softmax Regression (C2W3L08)</a> by <em>Andrew Ng</em>.</p>
-$$z(x)=\frac{1}{1+e^{-x}}$$<p>Here, we'll start drawing an equivalence between the mathematical part and the computational part to get a better intution.</p>
+<p>{% raw %}
+$$z(x)=\frac{1}{1+e^{-x}}$$
+{% endraw %}</p>
+<p>Here, we'll start drawing an equivalence between the mathematical part and the computational part to get a better intution.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;the sigmoid activation function&quot;&quot;&quot;</span>
@@ -126,7 +135,9 @@ Since every output of $f$ can be considered a separate function dependent on $n$
 <p><strong>Multivariate Notation</strong></p>
 <ul>
 <li>Consider outputs of a function $f$ to be numbered from 1 to m as $f_{1}, f_{2} \ldots f_{m}$. For all these outputs, we can calculate the partial derivative by any of n inputs as :
+{% raw %}
 $$D_{j} f_{i}(a)=\frac{\partial f_{i}}{\partial a_{j}}(a)$$
+{% endraw %}
 where $j$ goes from 1 to $n$, $a$ is a vector with $n$ elems. When $f$ is differentiable at $a$, then the derivative is expressed as the <em>Jacobian Matrix</em>: a matrix of all first-order partial derivatives of the function.</li>
 </ul>
 $$
@@ -162,7 +173,9 @@ y \\
 z
 \end{array}\right)=x^{2}+5y+10z+x y z$$</p>
 <p>Now, if we rewrite x, y, z as function of $t$, we get :
-$$f(x(t), y(t), z(t))=x(t)^{2}+x(t) y(t) z(t)+5 y(t) + 10 z(t)$$</p>
+{% raw %}
+$$f(x(t), y(t), z(t))=x(t)^{2}+x(t) y(t) z(t)+5 y(t) + 10 z(t)$$
+{% endraw %}</p>
 <p>Composing $f$ with $g$ gives us, $$(f \circ g)(t)=f(g(t))=f\left(t, t^{2}, t^{3}\right)=t^{2}+t^{6}+5 t^{2}+10 t^{3}=6 t^{2}+t^{6}+10 t^{3}$$ and the derivative is easily found out to be $(f \circ g)^{\prime}(t)=12 t+6 t^{5}+30 t^{2}$</p>
 <hr>
 <h4 id="Multi-variate-Approach:">Multi-variate Approach:<a class="anchor-link" href="#Multi-variate-Approach:"> </a></h4><p>Let's try the same thing now but using Multivariate Chain Rule. Thus to compute $D(f \circ g)(t)$ we need $D f(g(t))$ and $D g(t)$. Starting with $D f(g(t))$, let's find $D f(x, y, z)$. Since it's a mapping from $\mathbb{R}^{3} \rightarrow \mathbb{R}$, the Jacobian Matrix is $1x3$ or simply, a row vector as :</p>

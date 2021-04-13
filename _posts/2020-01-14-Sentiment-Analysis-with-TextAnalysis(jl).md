@@ -426,7 +426,7 @@ Stacktrace:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Ahh! Finally it's complete.</p>
 <p>We get <code>BoundsError: attempt to access 32×5000 Array{Float32,2} at index [Base.Slice(Base.OneTo(32)), 5001]</code> error however on seeing this issue on TextAnalysis package.</p>
-<blockquote><p>Ref: <a href="https://github.com/JuliaText/TextAnalysis.jl/issues/160">BoundsError in sentiment analysis</a>
+<blockquote><p>Ref:<a href="https://github.com/JuliaText/TextAnalysis.jl/issues/160">BoundsError in sentiment analysis</a>
 I've decided to ignore it. Let's get on towards calculating our predictions metrices: Precision / F1Score / Recall.</p>
 </blockquote>
 
@@ -435,19 +435,28 @@ I've decided to ignore it. Let's get on towards calculating our predictions metr
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>{% raw %}
 $$P = \frac{T_p}{T_p+F_p}$$
+{% endraw %}</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>{% raw %}
 $$R = \frac{T_p}{T_p + F_n}$$
+{% endraw %}</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>{% raw %}
 $$ F1 = \frac{2 \cdot P\cdot R}{P+ R} $$
+{% endraw %}</p>
+
 </div>
 </div>
 </div>

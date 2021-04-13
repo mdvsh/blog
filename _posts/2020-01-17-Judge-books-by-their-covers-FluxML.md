@@ -35,7 +35,7 @@ layout: notebook
 <blockquote><p>(Don't) judge a book by its cover.</p>
 </blockquote>
 <h3 id="Task-Description">Task Description<a class="anchor-link" href="#Task-Description"> </a></h3><p>Create a machine learning model to predict the category of a book from its cover image
-This task is inspired by this <a href="https: //arxiv.org/pdf/1610.09204.pdf">paper</a>. Your task is to use the Flux machine learning library to predict the category of books in this dataset based on their cover images.
+This task is inspired by this <a href="https://arxiv.org/pdf/1610.09204.pdf">paper</a>. Your task is to use the Flux machine learning library to predict the category of books in this dataset based on their cover images.
 You can find the Flux documentation <a href="https://fluxml.ai/Flux.jl/stable/">here</a> and sample models for image categorization in the model zoo. We recommend starting with a simple model like <a href="https://github.com/FluxML/model-zoo/blob/master/vision/mnist/mlp.jl">this</a> one and then optionally using a more complex one if you are interested.</p>
 <h3 id="Aim-:">Aim :<a class="anchor-link" href="#Aim-:"> </a></h3><p>In this notebook, I'll attempt to judge a book by it's cover (sorry Mom!). Pretty Simple right ? I think not...
 Shoutout to Akshat Mehortra and Mudit Somani for their helpful message in GCI Slack.</p>
@@ -66,7 +66,7 @@ Shoutout to Akshat Mehortra and Mudit Somani for their helpful message in GCI Sl
 <h2 id="2.-Getting-the-data">2. Getting the data<a class="anchor-link" href="#2.-Getting-the-data"> </a></h2><p>Data is sourced from <a href="https://github.com/uchidalab/book-dataset">The Book DatasSet</a>. We'll use <code>FileIO</code> to get it into a variable.
 It'd been better if the researcher could have made a script to download the full images in Julia also. I'll try doing that myself when I get some free time.</p>
 <p>Data Courtesy :</p>
-<blockquote><p>B. K. Iwana, S. T. Raza Rizvi, S. Ahmed, A. Dengel, and S. Uchida, "Judging a Book by its Cover," arXiv preprint arXiv: 1610.09204 (2016).</p>
+<blockquote><p>B. K. Iwana, S. T. Raza Rizvi, S. Ahmed, A. Dengel, and S. Uchida, "Judging a Book by its Cover," arXiv preprint arXiv:1610.09204 (2016).</p>
 </blockquote>
 
 </div>
