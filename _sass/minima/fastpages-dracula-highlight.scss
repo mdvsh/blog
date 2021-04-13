@@ -1,10 +1,6 @@
 // Override Syntax Highlighting In Minima With the Dracula Theme: https://draculatheme.com/
 // If you wish to override any of this CSS, do so in _sass/minima/custom-styles.css
-<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono|Source+Code+Pro&display=swap');
-=======
- 
->>>>>>> template/master
 $dt-gray-dark: #282a36;  // Background
 $dt-code-cell-background: #323443;
 $dt-gray: #44475a;       // Current Line & Selection
@@ -37,32 +33,20 @@ $dt-green-light: rgb(172, 229, 145);
 // for Jupyter Notebook HTML Code Cells modified from https://www.fast.ai/public/css/hyde.css
 
 .input_area pre, .input_area div {
-<<<<<<< HEAD
     margin-bottom:2rem !important;
-=======
-    margin-bottom:1.0rem !important;
->>>>>>> template/master
     margin-top:1.5rem !important;
     padding-bottom:0 !important;
     padding-top:0 !important;
     background: #323443 !important;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-<<<<<<< HEAD
     font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace;
-=======
-    font-family: Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace;
->>>>>>> template/master
     border-radius: 5px;
     font-size: 105%;
 }
 .output_area pre, .output_area div {
     margin-bottom:1rem !important;
-<<<<<<< HEAD
     margin-top:1rem !important;
-=======
-    margin-top:0rem !important;
->>>>>>> template/master
     padding-bottom:0 !important;
     padding-top:0 !important;
 }
@@ -70,15 +54,9 @@ $dt-green-light: rgb(172, 229, 145);
     border-left: 1px solid lightcoral;
 }
 .output_area pre {
-<<<<<<< HEAD
     border-left: 1px solid #F2F2F2;
     margin-left: 1rem !important;
     font-size: 105% !important;
-=======
-    border-left: 1px solid grey;
-    margin-left: 1rem !important;
-    font-size: 16px;
->>>>>>> template/master
 }
 
 .code_cell table { width: auto; }
@@ -99,10 +77,6 @@ $dt-green-light: rgb(172, 229, 145);
     pre, code {
      background: $dt-code-cell-background;
      color: $dt-gray-light;
-<<<<<<< HEAD
-=======
-     font-size: 110%;
->>>>>>> template/master
     }
    
     .hll,
@@ -172,20 +146,10 @@ $dt-green-light: rgb(172, 229, 145);
     .ch,
     .cm,
     .cpf,
-<<<<<<< HEAD
     .c1,
     .cs {
       color: $dt-blue;
     }
-=======
-    .cs {
-      color: $dt-blue;
-    }
-
-    .c1 {
-      color: gray;
-    }
->>>>>>> template/master
   
     .kd,
     .kt,
@@ -248,10 +212,3 @@ $dt-green-light: rgb(172, 229, 145);
       color: $dt-red;
     }
 }
-<<<<<<< HEAD
-=======
-
-p code{
-  font-size: 19px;
-}
->>>>>>> template/master

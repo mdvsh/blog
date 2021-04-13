@@ -1,10 +1,7 @@
 //Default Overrides For Styles In Minima 
 // If you wish to override any of this CSS, do so in _sass/minima/custom-styles.css
-<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:400,400i,700|Ubuntu:400,400i,700&display=swap');
 @import url('https://rsms.me/inter/inter.css');
-=======
->>>>>>> template/master
 
 .post img {
         display: block;
@@ -14,14 +11,6 @@
         margin-right: auto;
 }
 
-<<<<<<< HEAD
-=======
-img.emoji{
-      display: inline !important;
-      vertical-align: baseline !important;
-}
-
->>>>>>> template/master
 .post figcaption {
   text-align: center;
   font-size: .8rem;
@@ -32,21 +21,13 @@ img.emoji{
 .page-content {
         -webkit-font-smoothing: antialiased !important;
         text-rendering: optimizeLegibility !important;
-<<<<<<< HEAD
         font-family: 'Inter',"Segoe UI", SegoeUI, Roboto, "Segoe WP", 'IBM Plex Sans' , sans-serif !important;
-=======
-        font-family: "Segoe UI", SegoeUI, Roboto, "Segoe WP", "Helvetica Neue", "Helvetica", "Tahoma", "Arial", sans-serif !important;
->>>>>>> template/master
 }
 
 // make non-headings slightly lighter
 .post-content p, .post-content li {
    font-size: 20px;
-<<<<<<< HEAD
    color: #161616;
-=======
-   color: #515151;
->>>>>>> template/master
 }
 
 .post-link{
@@ -74,12 +55,6 @@ p {
 h1, h2, h3, h4 {
     font-weight: normal !important;
     margin-bottom:0.5rem !important;  
-<<<<<<< HEAD
-=======
-    code {
-      font-size: 100%;
-    }
->>>>>>> template/master
 }
 
 pre {
@@ -166,21 +141,13 @@ h6:hover .anchor-link {
 .post-meta-title, .post-meta{
   margin-top: .25em !important;
   margin-bottom: .25em !important;
-<<<<<<< HEAD
   font-size: 100%;
-=======
-  font-size: 105%;
->>>>>>> template/master
 }
 
 .page-description {
   margin-top: .5rem !important;
   margin-bottom: .5rem !important;
-<<<<<<< HEAD
   color: #161616;
-=======
-  color: #585858;
->>>>>>> template/master
   font-size: 115%;
 }
 
@@ -223,7 +190,6 @@ h6:hover .anchor-link {
   font-weight:bold;
 }
 
-<<<<<<< HEAD
 // Handle Overflow With Table Output
 
 table {
@@ -231,34 +197,21 @@ table {
   overflow-x: auto;
   white-space: nowrap;
   font-size: 75%;
-=======
-table {
-  white-space: normal;
-  max-width: 100%;
-  font-size: 100%;
->>>>>>> template/master
   border:none;
   th{
     text-align: center! important;
   }
-<<<<<<< HEAD
   td{
     text-overflow:ellipsis;
     overflow:hidden;
     max-width: 15em;
   }
-=======
->>>>>>> template/master
 }
 
 // customize scrollbars
 ::-webkit-scrollbar {
   width: 14px;
-<<<<<<< HEAD
   height: 14px;
-=======
-  height: 18px;
->>>>>>> template/master
 }
 ::-webkit-scrollbar-thumb {
   height: 6px;
@@ -281,7 +234,6 @@ table {
 .output_text.output_execute_result {
   pre{
     white-space: pre-wrap;
-<<<<<<< HEAD
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace;
@@ -296,29 +248,3 @@ pre{
   font-size: 108%;
 
 }
-=======
-  }
-}
-
-
-// Handling large charts on mobile devices
-// @media only screen and (max-width: 1200px) {
-//   /* for mobile phone and tablet devices */
-  .output_wrapper{
-    overflow: scroll;
-  }
-// }
-
-.svg-icon.orange{
-  width: 30px;
-  height: 23px;
-}
-
-.code_cell {
-  margin: 1.5rem 0px !important;
-}
-
-pre code {
-  font-size: 15px !important;
-}
->>>>>>> template/master

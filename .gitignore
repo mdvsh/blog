@@ -5,10 +5,6 @@ _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
-<<<<<<< HEAD
-=======
-*.xml
->>>>>>> template/master
 vendor
 _notebooks/.ipynb_checkpoints
 # Local Netlify folder

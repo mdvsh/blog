@@ -1,6 +1,5 @@
 ---
 layout: page
-<<<<<<< HEAD
 title: About
 permalink: /about/
 image: images/me.jpg
@@ -30,14 +29,3 @@ Beautiful landing image of the site is courtesy of [Unsplash](https://unsplash.c
 For typography, it uses the [Inter Typface](https://rsms.me/inter/) family. Mono-spaced goodness is provided by [IBM Plex](https://www.ibm.com/plex/) Mono.
 
 Lastly, [Git](http://git-scm.com/) is used to publish on Github, where all the code for this website is freely [available.](https://github.com/PseudoCodeNerd/blog)
-=======
-title: About Me
-permalink: /about/
----
-
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
-
-
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
->>>>>>> template/master

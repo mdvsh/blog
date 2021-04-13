@@ -23,11 +23,7 @@ if [[ "$INPUT_BOOL_SAVE_MARKDOWN" == "true" ]];then
 
     # Get user's email from commit history
     if [[ "$GITHUB_EVENT_NAME" == "push" ]];then
-<<<<<<< HEAD
         USER_EMAIL=`cat $GITHUB_EVENT_PATH | jq '.commits | .[0] | .author.email'`
-=======
-        USER_EMAIL=$(jq '.commits | .[0] | .author.email' < "$GITHUB_EVENT_PATH")
->>>>>>> template/master
     else
         USER_EMAIL="actions@github.com"
     fi
@@ -42,17 +38,10 @@ if [[ "$INPUT_BOOL_SAVE_MARKDOWN" == "true" ]];then
 
     # Optionally save intermediate markdown
     if [[ "$INPUT_BOOL_SAVE_MARKDOWN" == "true" ]]; then
-<<<<<<< HEAD
         git pull fastpages-origin ${GITHUB_REF} --ff-only
         git add _posts
         git commit -m "[Bot] Update $INPUT_FORMAT blog posts" --allow-empty
         git push fastpages-origin HEAD:${GITHUB_REF}
-=======
-        git pull fastpages-origin "${GITHUB_REF}" --ff-only
-        git add _posts
-        git commit -m "[Bot] Update $INPUT_FORMAT blog posts" --allow-empty
-        git push fastpages-origin HEAD:"$GITHUB_REF"
->>>>>>> template/master
     fi
 fi
 
