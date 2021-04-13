@@ -6,6 +6,7 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
+<<<<<<< HEAD
 title: Madhav's CS Blog
 description: All my activities and experiences in one place-mostly ML stuff.
 github_username: PseudoCodeNerd
@@ -15,6 +16,17 @@ github_repo: "blog"
 # OPTIONAL: override baseurl and url if using a custom domain
 # Note: leave out the trailing / from this value. 
 url: "https://PseudoCodeNerd.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+=======
+title: fastpages
+description: An easy to use blogging platform with support for Jupyter Notebooks.
+github_username: fastai
+# you can comment the below line out if your repo name is not different than your baseurl
+github_repo: "fastpages"
+
+# OPTIONAL: override baseurl and url if using a custom domain
+# Note: leave out the trailing / from this value. 
+url: "https://fastpages.fast.ai" # the base hostname & protocol for your site, e.g. http://example.com
+>>>>>>> template/master
 
 ###########################################################
 #########  Special Instructions for baseurl ###############
@@ -34,28 +46,51 @@ url: "https://PseudoCodeNerd.github.io" # the base hostname & protocol for your 
 #
 # 3. You must replace the parameter `baseurl` in _action_files/settings.ini with the same value as you set here but WITHOUT QUOTES.
 #
+<<<<<<< HEAD
 baseurl: "/blog" # the subpath of your site, e.g. "/blog".
+=======
+baseurl: "" # the subpath of your site, e.g. "/blog".
+>>>>>>> template/master
 
 # Github and twitter are optional:
 minima:
   social_links:
+<<<<<<< HEAD
     twitter: sharmadhav03
     github: pseudocodenerd
 
 # Set this to true to get LaTeX math equation support
 use_math: true
+=======
+    twitter: fastdotai
+    github: fastai
+
+# Set this to true to get LaTeX math equation support
+use_math: 
+>>>>>>> template/master
 
 # Set this to true to display the summary of your blog post under your title on the Home page.
 show_description: true
 
 # Set this to true to display image previews on home page, if they exist
+<<<<<<< HEAD
 show_image: true
+=======
+show_image: false
+
+# Set this to true to turn on annotations with hypothes.is (https://web.hypothes.is/)
+annotations: false
+>>>>>>> template/master
 
 # Set this to true to display tags on each post
 show_tags: true
 
 # Add your Google Analytics ID here if you have one and want to use it
+<<<<<<< HEAD
 google_analytics:
+=======
+google_analytics: UA-57531313-5
+>>>>>>> template/master
 
 exclude:
   - docker-compose.yml
@@ -66,6 +101,19 @@ exclude:
 include:
   - _pages
 
+<<<<<<< HEAD
+=======
+# This specifies what badges are turned on by default for notebook posts.
+default_badges:
+  github: true
+  binder: true
+  colab: true
+
+# Escape HTML in post descriptions
+html_escape:
+  description: false
+
+>>>>>>> template/master
 # Everything below here should be left alone. Modifications may break fastpages
 future: true
 theme: minima
@@ -79,10 +127,19 @@ plugins:
   - jekyll-seo-tag
   - jekyll-remote-theme
   - jekyll-paginate
+<<<<<<< HEAD
 
 # See https://jekyllrb.com/docs/pagination/
 # For pagination to work, you cannot have index.md at the root of your repo, instead you must rename this file to index.html
 paginate: 10
+=======
+  - jekyll-sitemap
+  - jemoji
+
+# See https://jekyllrb.com/docs/pagination/
+# For pagination to work, you cannot have index.md at the root of your repo, instead you must rename this file to index.html
+paginate: 15
+>>>>>>> template/master
 paginate_path: /page:num/
 
 remote_theme: jekyll/minima
@@ -100,3 +157,14 @@ kramdown:
   auto_ids: true
   hard_wrap: false
   syntax_highlighter: rouge
+<<<<<<< HEAD
+=======
+
+# to limit size of xml as it can grow quite large.
+feed:
+  posts_limit: 5 #default posts_limit: 10
+  excerpt_only: true
+  
+exclude:
+  - settings.ini
+>>>>>>> template/master

@@ -7,7 +7,11 @@ source "https://rubygems.org"
 #
 # This will help ensure the proper Jekyll version is running.
 # Happy Jekylling!
+<<<<<<< HEAD
 gem "jekyll", "~> 4.0.0"
+=======
+gem "jekyll", "~> 4.1.0"
+>>>>>>> template/master
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
 gem "minima"
 # To upgrade, run `bundle update github-pages`.
@@ -23,9 +27,17 @@ group :jekyll_plugins do
   gem 'jekyll-toc'
   gem 'jekyll-gist'
   gem 'jekyll-paginate'
+<<<<<<< HEAD
 end
 
 gem "kramdown-math-katex"
+=======
+  gem 'jekyll-sitemap'
+end
+
+gem "kramdown-math-katex"
+gem "jemoji"
+>>>>>>> template/master
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
 # and associated library.

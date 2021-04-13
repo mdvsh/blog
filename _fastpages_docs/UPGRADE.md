@@ -5,7 +5,11 @@
 - [Automated Upgrade](#automated-upgrade)
     - [Step 1: Open An Issue With The Upgrade Template.](#step-1-open-an-issue-with-the-upgrade-template)
     - [Step 2: Click `Submit new issue`](#step-2-click-submit-new-issue)
+<<<<<<< HEAD
     - [Step 3: A Link to Pull Request Will Appaer](#step-3-a-link-to-pull-request-will-appaer)
+=======
+    - [Step 3: A Link to Pull Request Will Appear](#step-3-a-link-to-pull-request-will-appear)
+>>>>>>> template/master
     - [Step 4: Review & Merge PR](#step-4-review-merge-pr)
 - [Manual Upgrade](#manual-upgrade)
     - [Easy Way (Recommended)](#easy-way-recommended)
@@ -13,6 +17,12 @@
 - [Additional Resources](#additional-resources)
 <!-- /TOC -->
 
+<<<<<<< HEAD
+=======
+
+**For fastpages repos that are older than December 1st, 2020 the only way to upgrade is to create a brand-new fastpages repo and copy your blog post files into it.**  This is because of breaking changes that were made to GitHub Actions around that time.
+
+>>>>>>> template/master
 There are two ways to upgrade fastpages.  One is an automated way that assumes you have made no changes to the HTML of your site. Alternatively, you may [upgrade manually](#manual-upgrade) and determine which changes to accept or reject.  For most people we recommend upgrading fastpages automatically.
 
 ## Automated Upgrade
@@ -33,7 +43,11 @@ There are two ways to upgrade fastpages.  One is an automated way that assumes y
 
     ![](upgrade_step2.png)
 
+<<<<<<< HEAD
 ### Step 3: A Link to Pull Request Will Appaer
+=======
+### Step 3: A Link to Pull Request Will Appear
+>>>>>>> template/master
 
 - This issue will trigger GitHub to open a PR making changes to your repository for the upgrade to take palce.  A comment with the link to the PR will be made in the issue, and will look like this:
 
@@ -42,7 +56,11 @@ There are two ways to upgrade fastpages.  One is an automated way that assumes y
     It is possible that you might receive an error message instead of this command.  You can follow the instructions in the comment to troubleshoot the issue.  Common reasons for receiving an error are:
 
     - You are up to date, therefore no upgrade is possible.  You will see an error that there is "nothing to commit".
+<<<<<<< HEAD
     - You already have a PR from a prevoius upgrade open that you never merged.
+=======
+    - You already have a PR from a previous upgrade open that you never merged.
+>>>>>>> template/master
 
     Please [ask on the forums](https://forums.fast.ai/) if you have encounter another problem that is unclear.
 

@@ -1,5 +1,6 @@
 <div class="px-2">
 {% if page.layout == 'notebook' %}
+<<<<<<< HEAD
     <a href="https://github.com/{{site.github_username}}/{{site.github_repo | default: site.baseurl | remove: "/" }}/tree/{{page.branch | default: "master" }}/{{page.nb_path}}" role="button">
 {% elsif page.layout == 'post' %}
     <a href="https://github.com/{{site.github_username}}/{{site.github_repo | default: site.baseurl | remove: "/" }}/tree/{{page.branch | default: "master" }}/{{page.path}}" role="button">
@@ -7,3 +8,12 @@
         <img class="notebook-badge-image" src="{{ "assets/badges/github.svg" | relative_url }}" alt="View On GitHub">
     </a>
 </div>
+=======
+    <a href="https://github.com/{{site.github_username}}/{{site.github_repo | default: site.baseurl | remove: "/" }}/tree/{{page.branch | default: "master" }}/{{page.nb_path}}" role="button" target="_blank">
+{% elsif page.layout == 'post' %}
+    <a href="https://github.com/{{site.github_username}}/{{site.github_repo | default: site.baseurl | remove: "/" }}/tree/{{page.branch | default: "master" }}/{{page.path}}" role="button" target="_blank">
+{% endif -%}
+        <img class="notebook-badge-image" src="{{ "assets/badges/github.svg" | relative_url }}" alt="View On GitHub">
+    </a>
+</div>
+>>>>>>> template/master
